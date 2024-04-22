@@ -7,6 +7,13 @@ android {
     namespace = "jp.ac.ecc.wisperclient"
     compileSdk = 33
 
+    //binding追加
+    buildFeatures{
+        viewBinding = true
+        dataBinding = true
+    }
+
+
     defaultConfig {
         applicationId = "jp.ac.ecc.wisperclient"
         minSdk = 24
