@@ -25,6 +25,7 @@ import java.util.Objects
  * ユーザが存在しない場合は、ユーザ作成画面に遷移してユーザ作成を行ってもらう
  */
 
+// Sourcetree ブランチ分けテスト
 
 class LoginActivity : AppCompatActivity() {
 
@@ -68,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
                     "\"password\":\"${passwordEdit.text}\""
                     "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-            //TODO:url変更する必要がある。
+            //TODO:API url変更する必要がある。
             val request = Request.Builder().url("http://10.0.2.2/SampleProject/sample.php").post(requestBody.toRequestBody(mediaType)).build()
 
 
