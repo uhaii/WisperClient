@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Telephony.Mms.Intents
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Toast
 import jp.ac.ecc.wisperclient.databinding.ActivityLoginBinding
 import okhttp3.Call
@@ -69,8 +70,8 @@ class LoginActivity : AppCompatActivity() {
                     "\"password\":\"${passwordEdit.text}\""
                     "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-            //TODO:API url変更する必要がある。
-            val request = Request.Builder().url("http://10.0.2.2/SampleProject/sample.php").post(requestBody.toRequestBody(mediaType)).build()
+            //TODO:API url変更する必要がある。　loginAuth.php
+            val request = Request.Builder().url("http://loginAuth.php").post(requestBody.toRequestBody(mediaType)).build()
 
 
             client.newCall(request!!).enqueue(object : Callback
@@ -94,6 +95,7 @@ class LoginActivity : AppCompatActivity() {
                             loginUserId = json.getString("userId")
 
                             // １－２－３－３．タイムライン画面に遷移する
+                            Log.e("Transiton Successed","画面遷移成功")
                             val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
                             startActivity(intent)
 
@@ -113,6 +115,7 @@ class LoginActivity : AppCompatActivity() {
         // １－３．createButtonのクリックイベントリスナーを作成する
         createButton.setOnClickListener {
             // １－３－１．ユーザ作成画面に遷移する
+            Log.e("Transiton Successed","画面遷移成功")
             val intent = Intent(this, CreateUserActivity::class.java)
             startActivity(intent)
         }
