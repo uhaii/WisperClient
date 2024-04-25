@@ -55,7 +55,8 @@ class LoginActivity : AppCompatActivity() {
         loginButton.setOnClickListener {
             //１－２－１．入力項目が空白の時、エラーメッセージをトースト表示して処理を終了させる
             if (userIdEdit.text.isEmpty() || passwordEdit.text.isEmpty()){
-                Toast.makeText(this, "ユーザー名またはパスワードを入力してください", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.blank_erroe_message, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
 
             //　TODO:チェック待ち　PHP　APIの連携
@@ -95,8 +96,8 @@ class LoginActivity : AppCompatActivity() {
                             loginUserId = json.getString("userId")
 
                             // １－２－３－３．タイムライン画面に遷移する
+                            //val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
                             Log.e("Transiton Successed","画面遷移成功")
-                            val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
                             startActivity(intent)
 
                             // １－２－３－４．自分の画面を閉じる
@@ -115,8 +116,8 @@ class LoginActivity : AppCompatActivity() {
         // １－３．createButtonのクリックイベントリスナーを作成する
         createButton.setOnClickListener {
             // １－３－１．ユーザ作成画面に遷移する
+            //val intent = Intent(this, CreateUserActivity::class.java)
             Log.e("Transiton Successed","画面遷移成功")
-            val intent = Intent(this, CreateUserActivity::class.java)
             startActivity(intent)
         }
 

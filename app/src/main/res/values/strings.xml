@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WisperClient</string>
+    <string name="blank_erroe_message">ユーザー名またはパスワードを入力してください</string>
 </resources>
