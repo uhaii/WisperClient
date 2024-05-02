@@ -39,7 +39,6 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_login)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -55,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
         loginButton.setOnClickListener {
             //１－２－１．入力項目が空白の時、エラーメッセージをトースト表示して処理を終了させる
             if (userIdEdit.text.isEmpty() || passwordEdit.text.isEmpty()){
-                Toast.makeText(this, R.string.blank_erroe_message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.login_blank_error_message, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -96,7 +95,7 @@ class LoginActivity : AppCompatActivity() {
                             loginUserId = json.getString("userId")
 
                             // １－２－３－３．タイムライン画面に遷移する
-                            //val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
+                            val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
                             Log.e("Transiton Successed","画面遷移成功")
                             startActivity(intent)
 
@@ -116,7 +115,7 @@ class LoginActivity : AppCompatActivity() {
         // １－３．createButtonのクリックイベントリスナーを作成する
         createButton.setOnClickListener {
             // １－３－１．ユーザ作成画面に遷移する
-            //val intent = Intent(this, CreateUserActivity::class.java)
+            val intent = Intent(this, CreateUserActivity::class.java)
             Log.e("Transiton Successed","画面遷移成功")
             startActivity(intent)
         }
