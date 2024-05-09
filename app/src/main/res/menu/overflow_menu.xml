@@ -5,20 +5,26 @@
 
     <item
         android:id="@+id/timeline"
-        android:title="TimeLine" />
+        android:title="TimeLine"
+        app:showAsAction="never" />
     <item
         android:id="@+id/search"
-        android:title="Search" />
+        android:title="Search"
+        app:showAsAction="never" />
     <item
         android:id="@+id/whisper"
-        android:title="Whisper" />
+        android:title="Whisper"
+        app:showAsAction="never" />
     <item
         android:id="@+id/myprofile"
-        android:title="Profile" />
+        android:title="Profile"
+        app:showAsAction="never" />
     <item
         android:id="@+id/profileedit"
-        android:title="UserEdit" />
+        android:title="UserEdit"
+        app:showAsAction="never" />
     <item
         android:id="@+id/logout"
-        android:title="Logout" />
+        android:title="Logout"
+        app:showAsAction="never" />
 </menu>

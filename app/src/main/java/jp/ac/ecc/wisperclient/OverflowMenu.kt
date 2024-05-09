@@ -3,6 +3,7 @@ package jp.ac.ecc.wisperclient
 import android.content.Intent
 import android.util.Log
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 
@@ -17,28 +18,30 @@ class OverflowMenu {
     // １．オプションメニュー生成メソッド
     fun onCreateOptionsMenu(menu: Menu?, activity: AppCompatActivity): Boolean {
         // １－１．引数で受けとったAppCompatActivityのインフレータを取得する
+        val inflater: MenuInflater = activity.menuInflater
         // １－２．インフレータにオーバーフローメニューのデザインを設定する
-        activity.menuInflater.inflate(R.menu.overflow_menu, menu)
-
+        inflater.inflate(R.menu.overflow_menu, menu)
         // １－３．戻り値にtrueをセットする
         return true
     }
 
     // ２．オプションメニューアイテム選択メソッド
     fun onOptionsItemSelected(item: MenuItem, activity: AppCompatActivity){
-        when (item.itemId){
+         when (item.itemId){
             // ２－１．受け取ったMenuItemがtimelineの時、タイムライン画面に遷移する
             R.id.timeline -> {
-                val intent = Intent(activity, TimelineActivity::class.java)
+//                val intent = Intent(activity, TimelineActivity::class.java)
                 Log.e("Transiton Successed","画面遷移成功")
-                activity.startActivity(intent)
+//                activity.startActivity(intent)
+
             }
 
             // ２－２．受け取ったMenuItemがsearchの時、検索画面に遷移する
             R.id.search ->{
-                val intent = Intent(activity, SearchActivity::class.java)
+//                val intent = Intent(activity, SearchActivity::class.java)
                 Log.e("Transiton Successed","画面遷移成功")
-                activity.startActivity(intent)
+//                activity.startActivity(intent)
+
             }
 
             // ２－３．受け取ったMenuItemがwhisperの時、ささやき登録画面に遷移する
@@ -47,24 +50,26 @@ class OverflowMenu {
                 Log.e("Transiton Successed","画面遷移成功")
                 activity.startActivity(intent)
 
+
             }
 
             // ２－４．受け取ったMenuItemがmyprofileの時
             R.id.myprofile -> {
                 // ２－４－１．インテントにログインユーザIDをセットする
-                val intent = Intent(activity, UserInfoActivity::class.java)
-                //TODO:LoginActivity.loginUserIdのところ確認必要
-                intent.putExtra("userId", LoginActivity.loginUserId)
+//                val intent = Intent(activity, UserInfoActivity::class.java)
+//                intent.putExtra("userId", LoginActivity.loginUserId)
                 // ２－４－２．ユーザ情報画面に遷移する
                 Log.e("Transiton Successed","画面遷移成功")
-                activity.startActivity(intent)
+//                activity.startActivity(intent)
+
             }
 
             // ２－５．受け取ったMenuItemがprofileeditの時、プロフィール編集画面に遷移する
             R.id.profileedit -> {
-                val intent = Intent(activity, UserEditAcritiby::class.java)
+//                val intent = Intent(activity, UserEditAcritiby::class.java)
                 Log.e("Transiton Successed","画面遷移成功")
-                activity.startActivity(intent)
+//                activity.startActivity(intent)
+
             }
 
             // ２－６．受け取ったMenuItemがlogoutの時
@@ -72,13 +77,14 @@ class OverflowMenu {
                 // ２－６－１．グローバル変数loginUserIdに空文字を格納する
                 LoginActivity.loginUserId = ""
                 // ２－６－２．ログイン画面に前画面情報をクリアして遷移する
-                //TODO:指示内容の理解に自信がない再検討する
                 val intent = Intent(activity, LoginActivity::class.java)
                 Log.e("Transiton Successed","画面遷移成功")
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                 activity.startActivity(intent)
                 activity.finishAffinity()
+
             }
+
         }
     }
 

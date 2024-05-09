@@ -72,8 +72,7 @@ class WhisperActivity : AppCompatActivity() {
                     override fun onResponse(call: Call, response: Response) {
                         try {
                             // １－２－３－２．インテントにログインユーザIDをセットする
-                            val intent = Intent(this@WhisperActivity, UserInfoActivity::class.java)
-                            //TODO:LoginActivity.loginUserIdのところ確認必要
+//                            val intent = Intent(this@WhisperActivity, UserInfoActivity::class.java)
                             intent.putExtra("userId", LoginActivity.loginUserId)
                             // １－２－３－３．ユーザ情報画面に遷移する
                             Log.e("Transiton Successed","画面遷移成功")
