@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "jp.ac.ecc.wisperclient"
-    compileSdk = 33
+    compileSdk = 34
 
     //binding追加
     buildFeatures{
@@ -17,7 +17,7 @@ android {
     defaultConfig {
         applicationId = "jp.ac.ecc.wisperclient"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 

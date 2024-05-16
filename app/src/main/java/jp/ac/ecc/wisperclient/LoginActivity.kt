@@ -93,8 +93,8 @@ class LoginActivity : AppCompatActivity() {
                             loginUserId = json.getString("userId")
 
                             // １－２－３－３．タイムライン画面に遷移する
-                            val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
-                            startActivity(intent)
+                            //val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
+                            //startActivity(intent)
 
                             // １－２－３－４．自分の画面を閉じる
                             finish()
@@ -112,7 +112,7 @@ class LoginActivity : AppCompatActivity() {
         // １－３．createButtonのクリックイベントリスナーを作成する
         createButton.setOnClickListener {
             // １－３－１．ユーザ作成画面に遷移する
-            val intent = Intent(this, CreateUserActivity::class.java)
+            val intent = Intent(this, UserActivity::class.java)
             startActivity(intent)
         }
 
