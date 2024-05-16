@@ -66,9 +66,9 @@ class OverflowMenu {
 
             // ２－５．受け取ったMenuItemがprofileeditの時、プロフィール編集画面に遷移する
             R.id.profileedit -> {
-//                val intent = Intent(activity, UserEditAcritiby::class.java)
+                val intent = Intent(activity, UserEditActivity::class.java)
                 Log.e("Transiton Successed","画面遷移成功")
-//                activity.startActivity(intent)
+                activity.startActivity(intent)
 
             }
 

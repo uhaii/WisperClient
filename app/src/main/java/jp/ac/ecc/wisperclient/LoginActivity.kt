@@ -70,7 +70,6 @@ class LoginActivity : AppCompatActivity() {
                     "\"password\":\"${passwordEdit.text}\""
                     "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-            //TODO:API url変更する必要がある。　loginAuth.php
             val request = Request.Builder().url("http://loginAuth.php").post(requestBody.toRequestBody(mediaType)).build()
 
 

@@ -57,7 +57,6 @@ class WhisperActivity : AppCompatActivity() {
             // TODO:確認　Bodyのデータ(APIに渡したいパラメータを設定)
             val requestBody =  "{\"content\":\"${wisperEdit.text}\"}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-            //TODO:API url変更する必要がある。　whisperAdd.php　?
             val request = Request.Builder().url("http://whisperAdd.php").post(requestBody.toRequestBody(mediaType)).build()
 
             client.newCall(request!!).enqueue(object : Callback
