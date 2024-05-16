@@ -113,7 +113,10 @@ class UserEditActivity : AppCompatActivity() {
                 // １－５－４．リクエストが失敗した時(コールバック処理)
                 override fun onFailure(call: Call, e: IOException) {
                     // １－５－４－１．エラーメッセージをトースト表示する
-                    Toast.makeText(this@UserEditActivity, e.message, Toast.LENGTH_SHORT).show()
+                    // エラー発生のため runOnUiThread で囲む会
+                    runOnUiThread {
+                        Toast.makeText(this@UserEditActivity, e.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 // １－５－２．正常にレスポンスを受け取った時(コールバック処理)
