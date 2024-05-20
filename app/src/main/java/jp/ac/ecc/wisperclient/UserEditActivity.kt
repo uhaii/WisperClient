@@ -21,6 +21,7 @@ import okio.IOException
 import org.json.JSONObject
 
 /**
+ * Fan
  * ログインユーザのプロフィール情報を登録・修正する画面
  * ユーザIDは変更不可とする。
  * ここで登録された内容はユーザ情報画面に表示される。

@@ -1,15 +1,18 @@
 package jp.ac.ecc.wisperclient
 
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import jp.ac.ecc.wisperclient.databinding.UserRowBinding
 
 /**
+ * Fan
  * recyclerViewで表示するユーザのフォロー・フォロワー数を表示する行情報
  * ユーザアイコンをタップするとユーザ情報画面に遷移を行う
 */
-class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter(private val userdataset : MutableList<UserRowData>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
     // １．ビューホルダー（内部クラス）
     inner class UserViewHolder(
         private val binding: UserRowBinding
@@ -34,11 +37,26 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
     // ３．ビューホルダーバインド時
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         // ３－１．ビューホルダーのオブジェクトに対象行のデータをセットする
+        holder.userNameText.text = userdataset[position].userName
+        holder.followCntText.text = userdataset[position].followCount.toString()
+        holder.followerCntText.text = userdataset[position].followerCount.toString()
+
+        // ３－２．userImageのクリックイベントリスナーを生成する
+        holder.userImage.setOnClickListener{
+            // ３－２－１．インテントに対象行のユーザIDをセットする
+//            val intent = Intent(holder.itemView.context, UserInfoActivity::class.java)
+//            intent.putExtra("userId", userdataset[position].userId)
+            // ３－２－２．ユーザ情報画面に遷移する
+            Log.e("Transiton Successed","画面遷移成功")
+//            holder.itemView.context.startActivity(intent)
+        }
 
     }
 
+    // ４．行数取得時
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        // ４－１．行リストの件数を戻り値にセットする
+        return userdataset.size
     }
 
 }

@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 
 /**
+ * Fan
  * ログインおよびユーザ作成画面以外のヘッダ部に表示するオーバーフローメニュー
  * 各画面で処理が必要なため、このクラスで共通処理できるようにする
  * 各メニューから対象の画面に遷移することができる

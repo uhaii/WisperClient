@@ -21,6 +21,7 @@ import org.json.JSONObject
 import java.util.Objects
 
 /**
+ * Fan
  * Whisperを利用するためのログイン画面
  * メールアドレス(userId)とパスワードを入力してログインを行う。
  * ユーザが存在しない場合は、ユーザ作成画面に遷移してユーザ作成を行ってもらう

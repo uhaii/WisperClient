@@ -20,6 +20,7 @@ import okio.IOException
 import java.lang.Exception
 
 /**
+ * Fan
  * 新しいWhisper（ささやき）を行う画面。
  * ささやき処理をするとユーザごとに各ささやきが管理される
  */
