@@ -49,7 +49,7 @@ class WhisperActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            //　TODO:チェック待ち　PHP　APIの連携
+            // TODO:チェック待ち　PHP　APIの連携
             // １－２－２．ささやき登録処理APIをリクエストして入力したささやきの登録処理を行う
             // HTTP接続用インスタンス生成
             val client = OkHttpClient()

@@ -6,11 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".WhisperActivity">
 
+    <EditText
+        android:id="@+id/wisperEdit"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="152dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Whisper Text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="122dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="320dp"
+        android:text="cancel"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.681"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/wisperText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="104dp"
+        android:layout_marginTop="80dp"
         android:text="Whisper"
         android:textSize="34sp"
         android:textStyle="bold"
@@ -22,35 +47,11 @@
         android:id="@+id/wisperButton"
         android:layout_width="227dp"
         android:layout_height="65dp"
-        android:layout_marginTop="264dp"
+        android:layout_marginTop="240dp"
         android:text="Whisper"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/cancelButton"
-        android:layout_width="122dp"
-        android:layout_height="61dp"
-        android:layout_marginTop="344dp"
-        android:text="cancel"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.681"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/wisperEdit"
-        android:layout_width="250dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="176dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Whisper Text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

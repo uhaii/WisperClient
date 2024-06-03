@@ -13,7 +13,7 @@
             android:id="@+id/userImage"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@tools:sample/avatars"
+
             android:translationX="20dp"
             android:translationY="20dp"
             android:translationZ="20dp" />

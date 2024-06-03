@@ -46,7 +46,7 @@ class UserEditActivity : AppCompatActivity() {
         val changeButton = binding.changeButton
         val cancelButton = binding.cancelButton
 
-        //　TODO:チェック待ち　PHP　APIの連携
+        // TODO:チェック待ち　PHP　APIの連携
         // １－２．ユーザ情報取得APIをリクエストしてログインユーザのユーザ情報取得処理を行う
         // HTTP接続用インスタンス生成
         val client = OkHttpClient()
@@ -94,7 +94,7 @@ class UserEditActivity : AppCompatActivity() {
         // １－５．changeButtonのクリックイベントリスナーを作成する
         changeButton.setOnClickListener {
             // １－５－１．ユーザ変更処理APIをリクエストして入力したユーザ情報の更新処理を行う
-            //　TODO:チェック待ち　PHP　APIの連携
+            // TODO:チェック待ち　PHP　APIの連携
             // １－２．ユーザ情報取得APIをリクエストしてログインユーザのユーザ情報取得処理を行う
             // HTTP接続用インスタンス生成
             val client = OkHttpClient()
