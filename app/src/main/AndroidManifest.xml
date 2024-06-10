@@ -23,9 +23,6 @@
             android:label="@string/title_activity_create_user"
             android:theme="@style/Theme.WisperClient" />
         <activity
-            android:name=".UserActivity"
-            android:exported="false" />
-        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
