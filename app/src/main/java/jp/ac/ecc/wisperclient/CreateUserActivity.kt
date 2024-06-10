@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import jp.ac.ecc.wisperclient.MyApplication.Companion.apiUrl
+import jp.ac.ecc.wisperclient.MyApplication.Companion.loginUserId
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType
@@ -83,7 +85,7 @@ class CreateUserActivity : AppCompatActivity() {
                     "\"password\":\"${passwordEdit.text}\""
             "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-            val request = Request.Builder().url("http://10.0.2.2/SampleProject/sample.php") 
+            val request = Request.Builder().url("${apiUrl}userAdd.php")
                 .post(requestBody.toRequestBody(mediaType)).build()
 
             // リクエスト送信（非同期処理）
@@ -105,11 +107,11 @@ class CreateUserActivity : AppCompatActivity() {
                         // APIから取得してきたJSON文字列をJSONオブジェクトに変換
                         val json = JSONObject(responseBody)
                         // １－２－３－２．グローバル変数loginUserIdに作成したユーザIDを格納する
-                        LoginActivity.loginUserId = json.getString("userId")
+                        loginUserId = json.getString("userId")
 
                         // １－２－３－３．タイムライン画面に遷移する
-                        //val intent = Intent(this@CreateUserActivity, TimelineActivity::class.java)
-                        //startActivity(intent)
+                        val intent = Intent(this@CreateUserActivity, TimelineActivity::class.java)
+                        startActivity(intent)
 
                         // １－２－３－４．自分の画面を閉じる
                         finish()
