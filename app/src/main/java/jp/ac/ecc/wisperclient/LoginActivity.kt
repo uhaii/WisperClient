@@ -112,7 +112,7 @@ class LoginActivity : AppCompatActivity() {
         // １－３．createButtonのクリックイベントリスナーを作成する
         createButton.setOnClickListener {
             // １－３－１．ユーザ作成画面に遷移する
-            val intent = Intent(this, UserActivity::class.java)
+            val intent = Intent(this, CreateUserActivity::class.java)
             startActivity(intent)
         }
 
