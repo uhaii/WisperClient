@@ -7,6 +7,7 @@ import android.provider.Telephony.Mms.Intents
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
+import jp.ac.ecc.wisperclient.MyApplication.Companion.apiUrl
 import jp.ac.ecc.wisperclient.MyApplication.Companion.loginUserId
 import jp.ac.ecc.wisperclient.databinding.ActivityLoginBinding
 import okhttp3.Call
@@ -67,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
                     "\"password\":\"${passwordEdit.text}\""
                     "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-            val request = Request.Builder().url("http://loginAuth.php").post(requestBody.toRequestBody(mediaType)).build()
+            val request = Request.Builder().url("${apiUrl}loginAuth.php").post(requestBody.toRequestBody(mediaType)).build()
 
 
             client.newCall(request!!).enqueue(object : Callback

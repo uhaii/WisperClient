@@ -90,7 +90,7 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
                     "\"goodFlg\":\"${whisperdataset[position].goodFlg}\""
             "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-            val request = Request.Builder().url("http://goodCtl.php").post(requestBody.toRequestBody(mediaType)).build()
+            val request = Request.Builder().url("${MyApplication.apiUrl}goodCtl.php").post(requestBody.toRequestBody(mediaType)).build()
 
             client.newCall(request!!).enqueue(object : Callback{
                 // ３－４－３．リクエストが失敗した時(コールバック処理)

@@ -63,7 +63,7 @@ class TimelineActivity : AppCompatActivity() {
         // TODO:確認　Bodyのデータ(APIに渡したいパラメータを設定)
         val requestBody =  "{\"content\":\"${loginUserId}\"}"
         // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-        val request = Request.Builder().url("http://timelineInfo.php").post(requestBody.toRequestBody(mediaType)).build()
+        val request = Request.Builder().url("${MyApplication.apiUrl}timelineInfo.php").post(requestBody.toRequestBody(mediaType)).build()
 
         client.newCall(request!!).enqueue(object : Callback{
             // ２－３．リクエストが失敗した時(コールバック処理)

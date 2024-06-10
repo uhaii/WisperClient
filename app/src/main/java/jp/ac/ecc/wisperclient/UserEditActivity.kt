@@ -55,7 +55,7 @@ class UserEditActivity : AppCompatActivity() {
         // TODO:確認　Bodyのデータ(APIに渡したいパラメータを設定)
         val requestBody =  "{\"userId\":\"${userIdText.text}\"}"
         // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-        val request = Request.Builder().url("http://userInfo.php").post(requestBody.toRequestBody(mediaType)).build()
+        val request = Request.Builder().url("${MyApplication.apiUrl}userInfo.php").post(requestBody.toRequestBody(mediaType)).build()
 
         client.newCall(request!!).enqueue(object : Callback
         {
@@ -107,7 +107,7 @@ class UserEditActivity : AppCompatActivity() {
                     "\"profile\":\"${profileEdit.text}\""
                     "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-            val request = Request.Builder().url("http://userUpd.php").post(requestBody.toRequestBody(mediaType)).build()
+            val request = Request.Builder().url("${MyApplication.apiUrl}userUpd.php").post(requestBody.toRequestBody(mediaType)).build()
 
             client.newCall(request!!).enqueue(object :Callback
             {
