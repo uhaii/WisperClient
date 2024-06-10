@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">WisperClient</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_create_user">CreateUserActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -43,8 +45,4 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <string name="login_blank_error_message">ユーザー名またはパスワードを入力してください</string>
-    <string name="whisper_blank_error_message">ささやき内容を入力してください</string>
-    <string name="search_blank_error_message">検査内容を入力してください</string>
-
 </resources>

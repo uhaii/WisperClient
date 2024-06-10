@@ -5,10 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Telephony.Mms.Intents
 import android.text.TextUtils
-import android.util.Log
 import android.widget.Toast
-import jp.ac.ecc.wisperclient.MyApplication.Companion.apiUrl
-import jp.ac.ecc.wisperclient.MyApplication.Companion.loginUserId
 import jp.ac.ecc.wisperclient.databinding.ActivityLoginBinding
 import okhttp3.Call
 import okhttp3.Callback
@@ -23,20 +20,24 @@ import org.json.JSONObject
 import java.util.Objects
 
 /**
- * Fan
  * Whisperを利用するためのログイン画面
  * メールアドレス(userId)とパスワードを入力してログインを行う。
  * ユーザが存在しない場合は、ユーザ作成画面に遷移してユーザ作成を行ってもらう
  */
 
-// Sourcetree ブランチ分けテスト
 
 class LoginActivity : AppCompatActivity() {
+
+    //グローバル変数定義
+    companion object{
+        var loginUserId : String? = ""
+    }
 
     lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //setContentView(R.layout.activity_login)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -52,8 +53,7 @@ class LoginActivity : AppCompatActivity() {
         loginButton.setOnClickListener {
             //１－２－１．入力項目が空白の時、エラーメッセージをトースト表示して処理を終了させる
             if (userIdEdit.text.isEmpty() || passwordEdit.text.isEmpty()){
-                Toast.makeText(this, R.string.login_blank_error_message, Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                Toast.makeText(this, "ユーザー名またはパスワードを入力してください", Toast.LENGTH_SHORT).show()
             }
 
             //　TODO:チェック待ち　PHP　APIの連携
@@ -68,7 +68,8 @@ class LoginActivity : AppCompatActivity() {
                     "\"password\":\"${passwordEdit.text}\""
                     "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-            val request = Request.Builder().url("${apiUrl}loginAuth.php").post(requestBody.toRequestBody(mediaType)).build()
+            //TODO:url変更する必要がある。
+            val request = Request.Builder().url("http://10.0.2.2/SampleProject/sample.php").post(requestBody.toRequestBody(mediaType)).build()
 
 
             client.newCall(request!!).enqueue(object : Callback
@@ -92,10 +93,8 @@ class LoginActivity : AppCompatActivity() {
                             loginUserId = json.getString("userId")
 
                             // １－２－３－３．タイムライン画面に遷移する
-                            val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
-                            Log.e("Transiton Successed","画面遷移成功")
-                            startActivity(intent)
-
+                            //val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
+                            //startActivity(intent)
 
                             // １－２－３－４．自分の画面を閉じる
                             finish()
@@ -113,8 +112,7 @@ class LoginActivity : AppCompatActivity() {
         // １－３．createButtonのクリックイベントリスナーを作成する
         createButton.setOnClickListener {
             // １－３－１．ユーザ作成画面に遷移する
-//            val intent = Intent(this, CreateUserActivity::class.java)
-            Log.e("Transiton Successed","画面遷移成功")
+            val intent = Intent(this, CreateUserActivity::class.java)
             startActivity(intent)
         }
 
