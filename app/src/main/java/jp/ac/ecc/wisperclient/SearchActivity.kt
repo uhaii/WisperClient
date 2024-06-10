@@ -110,10 +110,11 @@ class SearchActivity : AppCompatActivity() {
                             // 配列をfor文で回して中身を取得
                             for (i in 0 until jsonArray.length()){
                                 val whisperNo= jsonArray.getJSONObject(i).getString("whisperNo").toInt()
+                                val content = jsonArray.getJSONObject(i).getString("content")
                                 val userId = jsonArray.getJSONObject(i).getString("userId")
                                 val userName = jsonArray.getJSONObject(i).getString("userName")
                                 val goodCount = jsonArray.getJSONObject(i).getString("goodCount").toInt()
-                                goodlist.add(GoodRowData(whisperNo,userId,userName,goodCount))
+                                goodlist.add(GoodRowData(whisperNo,content,userId,userName,goodCount))
                             }
                         }
 

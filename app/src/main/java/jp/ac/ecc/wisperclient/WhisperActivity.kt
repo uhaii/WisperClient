@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import jp.ac.ecc.wisperclient.MyApplication.Companion.loginUserId
 import jp.ac.ecc.wisperclient.databinding.ActivityWhisperBinding
 import okhttp3.Call
 import okhttp3.Callback
@@ -73,7 +74,7 @@ class WhisperActivity : AppCompatActivity() {
                         try {
                             // １－２－３－２．インテントにログインユーザIDをセットする
 //                            val intent = Intent(this@WhisperActivity, UserInfoActivity::class.java)
-                            intent.putExtra("userId", LoginActivity.loginUserId)
+                            intent.putExtra("userId", loginUserId)
                             // １－２－３－３．ユーザ情報画面に遷移する
                             Log.e("Transiton Successed","画面遷移成功")
                             startActivity(intent)

@@ -38,7 +38,7 @@ class GoodAdapter(private val gooddataset : MutableList<GoodRowData>) : Recycler
     // ３．ビューホルダーバインド時
     override fun onBindViewHolder(holder: GoodViewHolder, position: Int) {
         // ３－１．ビューホルダーのオブジェクトに対象行のデータをセットする
-        holder.whisperText.text = gooddataset[position].whisperNo.toString()
+        holder.whisperText.text = gooddataset[position].content
         holder.userNameText.text = gooddataset[position].userName
         holder.goodCntText.text = gooddataset[position].goodCount.toString()
 

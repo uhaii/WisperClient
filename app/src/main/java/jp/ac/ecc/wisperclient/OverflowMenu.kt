@@ -6,6 +6,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import jp.ac.ecc.wisperclient.MyApplication.Companion.loginUserId
+
 
 /**
  * Fan
@@ -31,17 +33,17 @@ class OverflowMenu {
          when (item.itemId){
             // ２－１．受け取ったMenuItemがtimelineの時、タイムライン画面に遷移する
             R.id.timeline -> {
-//                val intent = Intent(activity, TimelineActivity::class.java)
+                val intent = Intent(activity, TimelineActivity::class.java)
                 Log.e("Transiton Successed","画面遷移成功")
-//                activity.startActivity(intent)
+                activity.startActivity(intent)
 
             }
 
             // ２－２．受け取ったMenuItemがsearchの時、検索画面に遷移する
             R.id.search ->{
-//                val intent = Intent(activity, SearchActivity::class.java)
+                val intent = Intent(activity, SearchActivity::class.java)
                 Log.e("Transiton Successed","画面遷移成功")
-//                activity.startActivity(intent)
+                activity.startActivity(intent)
 
             }
 
@@ -76,7 +78,7 @@ class OverflowMenu {
             // ２－６．受け取ったMenuItemがlogoutの時
             R.id.logout -> {
                 // ２－６－１．グローバル変数loginUserIdに空文字を格納する
-                LoginActivity.loginUserId = ""
+                loginUserId = ""
                 // ２－６－２．ログイン画面に前画面情報をクリアして遷移する
                 val intent = Intent(activity, LoginActivity::class.java)
                 Log.e("Transiton Successed","画面遷移成功")

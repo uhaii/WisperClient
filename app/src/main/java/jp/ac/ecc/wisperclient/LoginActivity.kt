@@ -7,6 +7,7 @@ import android.provider.Telephony.Mms.Intents
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
+import jp.ac.ecc.wisperclient.MyApplication.Companion.loginUserId
 import jp.ac.ecc.wisperclient.databinding.ActivityLoginBinding
 import okhttp3.Call
 import okhttp3.Callback
@@ -30,11 +31,6 @@ import java.util.Objects
 // Sourcetree ブランチ分けテスト
 
 class LoginActivity : AppCompatActivity() {
-
-    //グローバル変数定義
-    companion object{
-        var loginUserId : String? = ""
-    }
 
     lateinit var binding: ActivityLoginBinding
 
