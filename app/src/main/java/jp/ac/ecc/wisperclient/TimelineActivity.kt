@@ -3,9 +3,11 @@ package jp.ac.ecc.wisperclient
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import jp.ac.ecc.wisperclient.MyApplication
 import jp.ac.ecc.wisperclient.MyApplication.Companion.loginUserId
@@ -61,15 +63,19 @@ class TimelineActivity : AppCompatActivity() {
         // JSON形式でパラメータを送るようデータ形式を設定
         val mediaType : MediaType = "application/json; charset=utf-8".toMediaType()
         // TODO:確認　Bodyのデータ(APIに渡したいパラメータを設定)
-        val requestBody =  "{\"content\":\"${loginUserId}\"}"
+        val requestBody =  "{\"userId\":\"${loginUserId}\"}"
         // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
         val request = Request.Builder().url("${MyApplication.apiUrl}timelineInfo.php").post(requestBody.toRequestBody(mediaType)).build()
+
+        Log.e("successed send", "転送成功")
 
         client.newCall(request!!).enqueue(object : Callback{
             // ２－３．リクエストが失敗した時(コールバック処理)
             override fun onFailure(call: Call, e: IOException) {
-                // ２－３－１．エラーメッセージをトースト表示する
-                Toast.makeText(myapp, e.message, Toast.LENGTH_SHORT).show()
+                runOnUiThread {
+                    // ２－３－１．エラーメッセージをトースト表示する
+                    Toast.makeText(myapp, e.message, Toast.LENGTH_SHORT).show()
+                }
             }
 
             // ２－２．正常にレスポンスを受け取った時(コールバック処理)
@@ -96,6 +102,8 @@ class TimelineActivity : AppCompatActivity() {
                             whisperlist.add(WhisperRowData(userId, userName, whisperNo, content, goodFlg))
                         }
                     }
+                    // RecyclerViewを初期化する
+                    timelineRecycle.layoutManager = LinearLayoutManager(this@TimelineActivity)
                     // ２－２－４．timelineRecycleにささやき情報リストをセットする
                     timelineRecycle.adapter = WhisperAdapter(whisperlist)
 

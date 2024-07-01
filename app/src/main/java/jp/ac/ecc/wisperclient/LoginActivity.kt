@@ -29,7 +29,6 @@ import java.util.Objects
  * ユーザが存在しない場合は、ユーザ作成画面に遷移してユーザ作成を行ってもらう
  */
 
-// Sourcetree ブランチ分けテスト
 
 class LoginActivity : AppCompatActivity() {
 
@@ -64,12 +63,13 @@ class LoginActivity : AppCompatActivity() {
             val mediaType : MediaType = "application/json; charset=utf-8".toMediaType()
             // Bodyのデータ(APIに渡したいパラメータを設定)
             val requestBody = "{" +
-                    "\"userId\":\"${userIdEdit.text}\"" +
-                    "\"password\":\"${passwordEdit.text}\""
+                    "\"userId\":\"${userIdEdit.text}\"," +
+                    "\"password\":\"${passwordEdit.text}\"" +
                     "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
             val request = Request.Builder().url("${apiUrl}loginAuth.php").post(requestBody.toRequestBody(mediaType)).build()
 
+            Log.e("successed send", "転送成功")
 
             client.newCall(request!!).enqueue(object : Callback
                 {
@@ -89,13 +89,15 @@ class LoginActivity : AppCompatActivity() {
                             // APIから取得してきたJSON文字列をJSONオブジェクトに変換
                             val json = JSONObject(responseBody)
                             // １－２－３－２．グローバル変数loginUserIdに作成したユーザIDを格納する
-                            loginUserId = json.getString("userId")
+//                            loginUserId = json.getString("userId")
+                            loginUserId = userIdEdit.text.toString()
 
                             // １－２－３－３．タイムライン画面に遷移する
                             val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
+                            // 試し用
+//                            val intent = Intent(this@LoginActivity, WhisperActivity::class.java)
                             Log.e("Transiton Successed","画面遷移成功")
                             startActivity(intent)
-
 
                             // １－２－３－４．自分の画面を閉じる
                             finish()
@@ -104,6 +106,7 @@ class LoginActivity : AppCompatActivity() {
                             runOnUiThread {
                                 // １－２－３－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
                                 Toast.makeText(this@LoginActivity, e.message, Toast.LENGTH_SHORT).show()
+                                Log.e("failed", e.message.toString())
                             }
                         }
                     }
@@ -113,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
         // １－３．createButtonのクリックイベントリスナーを作成する
         createButton.setOnClickListener {
             // １－３－１．ユーザ作成画面に遷移する
-//            val intent = Intent(this, CreateUserActivity::class.java)
+            val intent = Intent(this, CreateUserActivity::class.java)
             Log.e("Transiton Successed","画面遷移成功")
             startActivity(intent)
         }

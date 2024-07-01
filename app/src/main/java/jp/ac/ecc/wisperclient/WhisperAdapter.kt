@@ -58,22 +58,22 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
 
         //TODO: ３－３．userImageのクリックイベントリスナーを生成する
         holder.userImage.setOnClickListener {
-//            val intent = Intent(context, UserInfoActivity::class.java)
-//            // ３－３－１．呼び出された画面がユーザ情報画面の時
-//            // TODO:確認必要あり　３－３－１－１．ユーザ情報画面から対象ユーザIDを取得する
-//            val userInfoId = intent.getIntExtra("userId",userId).toString()
-//            // ３－３－１－２．対象ユーザIDと対象行のユーザIDが違う時
-//            if (!whisperdataset[position].userId.equals(userInfoId) ){
-//                // ３－３－１－２－１．インテントに対象行のユーザIDをセットする
-//                intent.putExtra("userId",whisperdataset[position].userId)
-//                // ３－３－１－２－２．ユーザ情報画面に遷移する
-//                context.startActivity(intent)
-//            }
-//            // ３－３－２．呼び出された画面がタイムライン画面の時
-//            // ３－３－２－１．インテントに対象行のユーザIDをセットする
-//            intent.putExtra("userId", whisperdataset[position].userId)
-//            // ３－３－２－２．ユーザ情報画面に遷移する
-//            context.startActivity(intent)
+            val intent = Intent(context, UserInfoActivity::class.java)
+            // ３－３－１．呼び出された画面がユーザ情報画面の時
+            // TODO:確認必要あり　３－３－１－１．ユーザ情報画面から対象ユーザIDを取得する
+            val userInfoId = intent.getIntExtra("userId", -1).toString()
+            // ３－３－１－２．対象ユーザIDと対象行のユーザIDが違う時
+            if (!whisperdataset[position].userId.equals(userInfoId) ){
+                // ３－３－１－２－１．インテントに対象行のユーザIDをセットする
+                intent.putExtra("userId",whisperdataset[position].userId)
+                // ３－３－１－２－２．ユーザ情報画面に遷移する
+                context.startActivity(intent)
+            }
+            // ３－３－２．呼び出された画面がタイムライン画面の時
+            // ３－３－２－１．インテントに対象行のユーザIDをセットする
+            intent.putExtra("userId", whisperdataset[position].userId)
+            // ３－３－２－２．ユーザ情報画面に遷移する
+            context.startActivity(intent)
             Log.e("Transiton Successed","画面遷移成功")
         }
         // ３－４．goodImageのクリックイベントリスナーを生成する
@@ -85,12 +85,14 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
             val mediaType : MediaType = "application/json; charset=utf-8".toMediaType()
             // Bodyのデータ(APIに渡したいパラメータを設定)
             val requestBody = "{" +
-                    "\"userId\":\"${whisperdataset[position].userId}\"" +
-                    "\"whisperNo\":\"${whisperdataset[position].whisperNo}\"" +
+                    "\"userId\":\"${whisperdataset[position].userId}\"," +
+                    "\"whisperNo\":\"${whisperdataset[position].whisperNo}\"," +
                     "\"goodFlg\":\"${whisperdataset[position].goodFlg}\""
             "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
             val request = Request.Builder().url("${MyApplication.apiUrl}goodCtl.php").post(requestBody.toRequestBody(mediaType)).build()
+
+            Log.e("successed send", "転送成功")
 
             client.newCall(request!!).enqueue(object : Callback{
                 // ３－４－３．リクエストが失敗した時(コールバック処理)
@@ -104,9 +106,20 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
                     try {
                         //TODO: ３－４－２－２．呼び出された画面がユーザ情報画面の時
                         // ユーザ情報画面のユーザささやき情報取得API共通実行メソッドを呼び出す
-//                        if (context is UserInfoActivity){
-//                            context.getWhisperInfo()
-//                        }
+                        if (context is UserInfoActivity){
+                            context.getWhisperInfo(
+                                context.application as MyApplication,
+                                whisperdataset[position].userId,
+                                MyApplication.loginUserId.toString(),
+                                context.binding.userNameText,
+                                context.binding.profileText,
+                                context.binding.followCntText,
+                                context.binding.followerCntText,
+                                context.binding.followButton,
+                                context.binding.userRecycle,
+                                context.binding.radiogroup2
+                            )
+                        }
                         //TODO: ３－４－２－３．呼び出された画面がタイムライン画面の時
                         // タイムライン画面のタイムライン情報取得API共通実行メソッドを呼び出す
                         if (context is TimelineActivity){

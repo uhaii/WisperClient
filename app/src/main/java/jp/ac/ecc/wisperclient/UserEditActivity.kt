@@ -46,6 +46,9 @@ class UserEditActivity : AppCompatActivity() {
         val changeButton = binding.changeButton
         val cancelButton = binding.cancelButton
 
+        // ユーザIDをセットする
+        userIdText.text = MyApplication.loginUserId
+
         // TODO:チェック待ち　PHP　APIの連携
         // １－２．ユーザ情報取得APIをリクエストしてログインユーザのユーザ情報取得処理を行う
         // HTTP接続用インスタンス生成
@@ -53,9 +56,15 @@ class UserEditActivity : AppCompatActivity() {
         // JSON形式でパラメータを送るようデータ形式を設定
         val mediaType : MediaType = "application/json; charset=utf-8".toMediaType()
         // TODO:確認　Bodyのデータ(APIに渡したいパラメータを設定)
-        val requestBody =  "{\"userId\":\"${userIdText.text}\"}"
+        val requestBody = "{" +
+                "\"userId\":\"${userIdText.text}\"" +
+                "}"
+
+
         // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
         val request = Request.Builder().url("${MyApplication.apiUrl}userInfo.php").post(requestBody.toRequestBody(mediaType)).build()
+
+        Log.e("successed send", "userInfo.phpに転送成功")
 
         client.newCall(request!!).enqueue(object : Callback
         {
@@ -100,21 +109,23 @@ class UserEditActivity : AppCompatActivity() {
             val client = OkHttpClient()
             // JSON形式でパラメータを送るようデータ形式を設定
             val mediaType : MediaType = "application/json; charset=utf-8".toMediaType()
-            // TODO:確認　Bodyのデータ(APIに渡したいパラメータを設定)
+            // TODO:確認　Bodyのデータ(APIに渡したいパラメータを設定) passwordなしでいいか試し
             val requestBody = "{" +
-                    "\"userId\":\"${userIdText.text}\"" +
-                    "\"userName\":\"${userNameEdit.text}\"" +
-                    "\"profile\":\"${profileEdit.text}\""
+                    "\"userId\":\"${userIdText.text}\"," +
+                    "\"userName\":\"${userNameEdit.text}\"," +
+                    "\"profile\":\"${profileEdit.text}\"" +
                     "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
             val request = Request.Builder().url("${MyApplication.apiUrl}userUpd.php").post(requestBody.toRequestBody(mediaType)).build()
+
+            Log.e("successed send", "userUpd.phpに転送成功")
 
             client.newCall(request!!).enqueue(object :Callback
             {
                 // １－５－４．リクエストが失敗した時(コールバック処理)
                 override fun onFailure(call: Call, e: IOException) {
                     // １－５－４－１．エラーメッセージをトースト表示する
-                    // エラー発生のため runOnUiThread で囲む会
+                    // エラー発生のため runOnUiThread で囲む
                     runOnUiThread {
                         Toast.makeText(this@UserEditActivity, e.message, Toast.LENGTH_SHORT).show()
                     }
@@ -124,11 +135,11 @@ class UserEditActivity : AppCompatActivity() {
                 override fun onResponse(call: Call, response: Response) {
                     try {
                         //TODO: １－５－２－２．インテントにログインユーザIDをセットする
-//                        val intent = Intent(this@UserEditActivity, UserInfoActivity::class.java)
-//                        intent.putExtra("userId", LoginActivity.loginUserId)
+                        val intent = Intent(this@UserEditActivity, UserInfoActivity::class.java)
+                        intent.putExtra("userId", MyApplication.loginUserId)
                         // １－５－２－３．ユーザ情報画面に遷移する
                         Log.e("Transiton Successed","画面遷移成功")
-//                        startActivity(intent)
+                        startActivity(intent)
                         // １－５－２－４．自分の画面を閉じる
                         finish()
 

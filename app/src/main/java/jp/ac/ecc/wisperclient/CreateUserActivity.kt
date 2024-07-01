@@ -3,6 +3,7 @@ package jp.ac.ecc.wisperclient
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -80,13 +81,19 @@ class CreateUserActivity : AppCompatActivity() {
             val mediaType: MediaType = "application/json; charset=utf-8".toMediaType()
             // Bodyのデータ(APIに渡したいパラメータを設定)
             val requestBody = "{" +
-                    "\"userName\":\"${userNameEdit.text}\"" +
-                    "\"userId\":\"${userIdEdit.text}\"" +
-                    "\"password\":\"${passwordEdit.text}\""
+                    "\"userName\":\"${userNameEdit.text}\"," +
+                    "\"userId\":\"${userIdEdit.text}\"," +
+                    "\"password\":\"${passwordEdit.text}\"" +
             "}"
+
+            Log.d("requestBody",requestBody)
+
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
             val request = Request.Builder().url("${apiUrl}userAdd.php")
                 .post(requestBody.toRequestBody(mediaType)).build()
+
+            Log.e("successed send", "転送成功")
+
 
             // リクエスト送信（非同期処理）
             client.newCall(request!!).enqueue(object : Callback {
@@ -94,6 +101,8 @@ class CreateUserActivity : AppCompatActivity() {
                 override fun onFailure(call: Call, e: IOException) {
                     // runOnUiThreadメソッドを使うことでUIを操作することができる。(postメソッドでも可)
                     runOnUiThread {
+                        // TEST
+                        Log.e("1", e.message.toString())
                         Toast.makeText(this@CreateUserActivity, e.message, Toast.LENGTH_SHORT)
                             .show()
                     }
@@ -103,11 +112,14 @@ class CreateUserActivity : AppCompatActivity() {
                 override fun onResponse(call: Call, response: Response) {
                     try {
                         // APIから受け取ったデータを文字列で取得
-                        val responseBody = response.body?.string()
+                        val responseBody = response.body.string()
+                        Log.e("body", responseBody)
                         // APIから取得してきたJSON文字列をJSONオブジェクトに変換
                         val json = JSONObject(responseBody)
                         // １－２－３－２．グローバル変数loginUserIdに作成したユーザIDを格納する
-                        loginUserId = json.getString("userId")
+                        // 変更：戻り値userIdを含んでいないため、格納したのは画面入力したもの
+//                        loginUserId = json.getString("userId")
+                        loginUserId = userId
 
                         // １－２－３－３．タイムライン画面に遷移する
                         val intent = Intent(this@CreateUserActivity, TimelineActivity::class.java)
@@ -118,6 +130,8 @@ class CreateUserActivity : AppCompatActivity() {
 
                     } catch (e: Exception) {
                         runOnUiThread {
+                            // TEST
+                            Log.e("2", e.message.toString())
                             // １－２－３－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
                             Toast.makeText(this@CreateUserActivity, e.message, Toast.LENGTH_SHORT)
                                 .show()

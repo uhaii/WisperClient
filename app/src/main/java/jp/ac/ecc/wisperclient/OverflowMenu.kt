@@ -52,19 +52,16 @@ class OverflowMenu {
                 val intent = Intent(activity, WhisperActivity::class.java)
                 Log.e("Transiton Successed","画面遷移成功")
                 activity.startActivity(intent)
-
-
             }
 
             // ２－４．受け取ったMenuItemがmyprofileの時
             R.id.myprofile -> {
                 // ２－４－１．インテントにログインユーザIDをセットする
-//                val intent = Intent(activity, UserInfoActivity::class.java)
-//                intent.putExtra("userId", LoginActivity.loginUserId)
+                val intent = Intent(activity, UserInfoActivity::class.java)
+                intent.putExtra("userId", loginUserId)
                 // ２－４－２．ユーザ情報画面に遷移する
                 Log.e("Transiton Successed","画面遷移成功")
-//                activity.startActivity(intent)
-
+                activity.startActivity(intent)
             }
 
             // ２－５．受け取ったMenuItemがprofileeditの時、プロフィール編集画面に遷移する
@@ -72,7 +69,6 @@ class OverflowMenu {
                 val intent = Intent(activity, UserEditActivity::class.java)
                 Log.e("Transiton Successed","画面遷移成功")
                 activity.startActivity(intent)
-
             }
 
             // ２－６．受け取ったMenuItemがlogoutの時
@@ -85,7 +81,6 @@ class OverflowMenu {
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                 activity.startActivity(intent)
                 activity.finishAffinity()
-
             }
 
         }

@@ -46,6 +46,8 @@ class SearchActivity : AppCompatActivity() {
         val searchButton = binding.searchButton
         val searchRecycle = binding.searchRecycle
 
+
+
         // １－２．searchButtonのクリックイベントリスナーを作成する
         searchButton.setOnClickListener {
             // １－２－１．入力項目が空白の時、エラーメッセージをトースト表示して処理を終了させる
@@ -55,20 +57,34 @@ class SearchActivity : AppCompatActivity() {
             }
 
             // １－２－２．検索結果取得APIをリクエストして検索キーワードに該当する情報取得を行う
+            // 追加：ラジオボタン判断
+            val section : Int
+            if (userRadio.isChecked){
+                section = 1
+            } else {
+                section = 2
+            }
             // HTTP接続用インスタンス生成
             val client = OkHttpClient()
             // JSON形式でパラメータを送るようデータ形式を設定
             val mediaType : MediaType = "application/json; charset=utf-8".toMediaType()
             // TODO:確認　Bodyのデータ(APIに渡したいパラメータを設定)
-            val requestBody =  "{\"content\":\"${searchEdit.text}\"}"
+            val requestBody =  "{" +
+                    "\"section\":\"${section}\"," +
+                    "\"string\":\"${searchEdit.text}\"" +
+                    "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
             val request = Request.Builder().url("${MyApplication.apiUrl}search.php").post(requestBody.toRequestBody(mediaType)).build()
+
+            Log.e("successed send", "転送成功")
 
             client.newCall(request).enqueue(object : Callback{
                 // １－２－４．リクエストが失敗した時(コールバック処理)
                 override fun onFailure(call: Call, e: IOException) {
-                    // １－２－４－１．エラーメッセージをトースト表示する
-                    Toast.makeText(this@SearchActivity, e.message, Toast.LENGTH_SHORT).show()
+                    runOnUiThread {
+                        // １－２－４－１．エラーメッセージをトースト表示する
+                        Toast.makeText(this@SearchActivity, e.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 // １－２－３．正常にレスポンスを受け取った時(コールバック処理)
@@ -129,7 +145,7 @@ class SearchActivity : AppCompatActivity() {
                                 Log.e("Search Successed","ユーザー検索成功")
                             }
                             // １－２－３－２．ラジオボタンがwhisperRadioを選択している時イイね行情報のアダプターにイイね情報リストをセットする
-                            else if (whisperRadio.isChecked){
+                            else {
                                 searchRecycle.adapter = GoodAdapter(goodlist)
                                 Log.e("Search Successed","ささやき検索成功")
                             }

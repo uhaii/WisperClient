@@ -57,23 +57,32 @@ class WhisperActivity : AppCompatActivity() {
             // JSON形式でパラメータを送るようデータ形式を設定
             val mediaType : MediaType = "application/json; charset=utf-8".toMediaType()
             // TODO:確認　Bodyのデータ(APIに渡したいパラメータを設定)
-            val requestBody =  "{\"content\":\"${wisperEdit.text}\"}"
+            val requestBody =  "{" +
+                    "\"userId\":\"${loginUserId}\"," +
+                    "\"content\":\"${wisperEdit.text}\"" +
+                    "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
             val request = Request.Builder().url("${MyApplication.apiUrl}whisperAdd.php").post(requestBody.toRequestBody(mediaType)).build()
+
+            Log.e("successed send", "転送成功")
 
             client.newCall(request!!).enqueue(object : Callback
                 {
                     // １－２－４．リクエストが失敗した時(コールバック処理)
                     override fun onFailure(call: Call, e: IOException) {
-                        // １－２－４－１．エラーメッセージをトースト表示する
-                        Toast.makeText(this@WhisperActivity, e.message, Toast.LENGTH_SHORT).show()
+                        runOnUiThread {
+                            // １－２－４－１．エラーメッセージをトースト表示する
+                            Toast.makeText(this@WhisperActivity, e.message, Toast.LENGTH_SHORT).show()
+                        }
                     }
 
                     // １－２－３．正常にレスポンスを受け取った時(コールバック処理)
                     override fun onResponse(call: Call, response: Response) {
                         try {
                             // １－２－３－２．インテントにログインユーザIDをセットする
-//                            val intent = Intent(this@WhisperActivity, UserInfoActivity::class.java)
+                            val intent = Intent(this@WhisperActivity, UserInfoActivity::class.java)
+                            //　試し用
+//                            val intent = Intent(this@WhisperActivity, LoginActivity::class.java)
                             intent.putExtra("userId", loginUserId)
                             // １－２－３－３．ユーザ情報画面に遷移する
                             Log.e("Transiton Successed","画面遷移成功")
@@ -84,6 +93,7 @@ class WhisperActivity : AppCompatActivity() {
                         } catch (e : Exception){
                             // １－２－３－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
                             Toast.makeText(this@WhisperActivity, e.message, Toast.LENGTH_SHORT).show()
+                            Log.e("failed 1", e.message.toString())
                         }
                     }
                 })

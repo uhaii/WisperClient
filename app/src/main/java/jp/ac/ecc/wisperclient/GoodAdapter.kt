@@ -45,11 +45,11 @@ class GoodAdapter(private val gooddataset : MutableList<GoodRowData>) : Recycler
         // ３－２．userImageのクリックイベントリスナーを生成する
         holder.userImage.setOnClickListener {
             // ３－２－１．インテントに対象行のユーザIDをセットする
-//            val intent = Intent(holder.itemView.context, UserInfoActivity::class.java)
-//            intent.putExtra("userId", gooddataset[position].userId)
+            val intent = Intent(holder.itemView.context, UserInfoActivity::class.java)
+            intent.putExtra("userId", gooddataset[position].userId)
             // ３－２－２．ユーザ情報画面に遷移する
             Log.e("Transiton Successed","画面遷移成功")
-//            holder.itemView.context.startActivity(intent)
+            holder.itemView.context.startActivity(intent)
         }
     }
 
