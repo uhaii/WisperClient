@@ -112,8 +112,8 @@ class CreateUserActivity : AppCompatActivity() {
                 override fun onResponse(call: Call, response: Response) {
                     try {
                         // APIから受け取ったデータを文字列で取得
-                        val responseBody = response.body.string()
-                        Log.e("body", responseBody)
+                        val responseBody = response.body?.string()
+//                        Log.e("body", responseBody)
                         // APIから取得してきたJSON文字列をJSONオブジェクトに変換
                         val json = JSONObject(responseBody)
                         // １－２－３－２．グローバル変数loginUserIdに作成したユーザIDを格納する

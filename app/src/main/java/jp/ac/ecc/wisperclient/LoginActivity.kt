@@ -83,30 +83,32 @@ class LoginActivity : AppCompatActivity() {
 
                     // １－２－３．正常にレスポンスを受け取った時(コールバック処理)
                     override fun onResponse(call: Call, response: Response) {
-                        try {
-                            // APIから受け取ったデータを文字列で取得
-                            val responseBody = response.body?.string()
-                            // APIから取得してきたJSON文字列をJSONオブジェクトに変換
-                            val json = JSONObject(responseBody)
-                            // １－２－３－２．グローバル変数loginUserIdに作成したユーザIDを格納する
+                        runOnUiThread {
+                            try {
+                                // APIから受け取ったデータを文字列で取得
+                                val responseBody = response.body?.string()
+                                // APIから取得してきたJSON文字列をJSONオブジェクトに変換
+                                val json = JSONObject(responseBody)
+                                // １－２－３－２．グローバル変数loginUserIdに作成したユーザIDを格納する
 //                            loginUserId = json.getString("userId")
-                            loginUserId = userIdEdit.text.toString()
+                                loginUserId = userIdEdit.text.toString()
 
-                            // １－２－３－３．タイムライン画面に遷移する
-                            val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
-                            // 試し用
+                                // １－２－３－３．タイムライン画面に遷移する
+                                val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
+                                // 試し用
 //                            val intent = Intent(this@LoginActivity, WhisperActivity::class.java)
-                            Log.e("Transiton Successed","画面遷移成功")
-                            startActivity(intent)
+                                Log.e("Transiton Successed","画面遷移成功")
+                                startActivity(intent)
 
-                            // １－２－３－４．自分の画面を閉じる
-                            finish()
+                                // １－２－３－４．自分の画面を閉じる
+                                finish()
 
-                        } catch (e : Exception){
-                            runOnUiThread {
-                                // １－２－３－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
-                                Toast.makeText(this@LoginActivity, e.message, Toast.LENGTH_SHORT).show()
-                                Log.e("failed", e.message.toString())
+                            } catch (e : Exception){
+                                runOnUiThread {
+                                    // １－２－３－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
+                                    Toast.makeText(this@LoginActivity, e.message, Toast.LENGTH_SHORT).show()
+                                    Log.e("failed", e.message.toString())
+                                }
                             }
                         }
                     }
@@ -120,7 +122,5 @@ class LoginActivity : AppCompatActivity() {
             Log.e("Transiton Successed","画面遷移成功")
             startActivity(intent)
         }
-
     }
-
 }

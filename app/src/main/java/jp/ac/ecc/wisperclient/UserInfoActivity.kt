@@ -80,18 +80,6 @@ class UserInfoActivity : AppCompatActivity() {
             when (checkedId){
                 R.id.whisperRadio -> {
                     //TODO: １－４－１．ユーザささやき情報取得API　共通実行メソッドを呼び出して最新の状態にする
-                    // myapp : MyApplication,
-                    //        userId : String?,
-                    //        loginUserId : String,
-                    //        userNameTx : TextView,
-                    //        userProfileTx : TextView,
-                    //        followCountTx : TextView,
-                    //        followerCountTx : TextView,
-                    //        followBtn : Button,
-                    //        userRecycle : RecyclerView,
-                    //        radioGroup : RadioGroup,
-
-
                     getWhisperInfo(
                         MyApplication(),
                         userId,
@@ -120,7 +108,7 @@ class UserInfoActivity : AppCompatActivity() {
             intent.putExtra("follow",followText.toString())
             // １－５－３．フォロー一覧画面に遷移する
             startActivity(intent)
-            Log.e("Transiton Successed","画面遷移成功")
+            Log.e("UserInfo fTransiton Successed","画面遷移成功")
         }
 
         // １－６．followerTextのクリックイベントリスナーを作成する
@@ -134,7 +122,7 @@ class UserInfoActivity : AppCompatActivity() {
             intent.putExtra("follower", followerText.toString())
             // １－６－３．フォロー一覧画面に遷移する
             startActivity(intent)
-            Log.e("Transiton Successed","画面遷移成功")
+            Log.e("UserInfo frTransiton Successed","画面遷移成功")
         }
 
         // １－７．followButtonのクリックイベントリスナーを作成する
@@ -162,6 +150,7 @@ class UserInfoActivity : AppCompatActivity() {
                     // １－７－３－１．エラーメッセージをトースト表示する
                     runOnUiThread {
                         Toast.makeText(this@UserInfoActivity, e.message, Toast.LENGTH_SHORT).show()
+                        Log.e("follow Failed 1", e.message.toString())
                     }
                 }
 
@@ -173,6 +162,7 @@ class UserInfoActivity : AppCompatActivity() {
                         intent.putExtra("userId", userId)
                         // １－７－２－３．ユーザ情報画面に遷移する
                         startActivity(intent)
+                        Log.e("UserInfo Transiton Successed","画面遷移成功")
                         // １－７－２－４．自分の画面を閉じる
                         finish()
 
@@ -180,6 +170,7 @@ class UserInfoActivity : AppCompatActivity() {
                         // １－７－２－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
                         runOnUiThread {
                             Toast.makeText(this@UserInfoActivity, e.message, Toast.LENGTH_SHORT).show()
+                            Log.e("follow Failed 2", e.message.toString())
                         }
                     }
                 }
@@ -224,6 +215,7 @@ class UserInfoActivity : AppCompatActivity() {
                 // ２－３－１．エラーメッセージをトースト表示する
                 runOnUiThread {
                     Toast.makeText(this@UserInfoActivity, e.message, Toast.LENGTH_SHORT).show()
+                    Log.e("whisperInfo Failed 1", e.message.toString())
                 }
             }
 
@@ -233,6 +225,8 @@ class UserInfoActivity : AppCompatActivity() {
                     // ２－２－２．取得したデータを各オブジェクトにセットする
                     // APIから受け取ったデータを文字列で取得
                     val responseBody = response.body?.string()
+                    // 確認
+                    Log.e("UserInfo body", responseBody ?:"body is null")
                     // APIから取得してきたJSON文字列をJSONオブジェクトに変換
                     val json = JSONObject(responseBody)
                     // ささやき情報に使っているリスト生成
@@ -312,6 +306,7 @@ class UserInfoActivity : AppCompatActivity() {
                     // ２－２－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
                     runOnUiThread {
                         Toast.makeText(this@UserInfoActivity, e.message, Toast.LENGTH_SHORT).show()
+                        Log.e("whisperInfo Failed 2", e.message.toString())
                     }
                 }
             }

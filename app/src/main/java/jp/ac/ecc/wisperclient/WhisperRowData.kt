@@ -5,4 +5,4 @@ data class WhisperRowData(
     val userName : String,
     val whisperNo : Int,
     val content : String,
-    val goodFlg : Boolean)
+    var goodFlg : Boolean)

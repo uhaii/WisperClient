@@ -67,7 +67,7 @@ class TimelineActivity : AppCompatActivity() {
         // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
         val request = Request.Builder().url("${MyApplication.apiUrl}timelineInfo.php").post(requestBody.toRequestBody(mediaType)).build()
 
-        Log.e("successed send", "転送成功")
+        Log.e("timeline successed send", "転送成功")
 
         client.newCall(request!!).enqueue(object : Callback{
             // ２－３．リクエストが失敗した時(コールバック処理)
@@ -75,42 +75,46 @@ class TimelineActivity : AppCompatActivity() {
                 runOnUiThread {
                     // ２－３－１．エラーメッセージをトースト表示する
                     Toast.makeText(myapp, e.message, Toast.LENGTH_SHORT).show()
+                    Log.e("timeline Failed 1",e.message.toString())
                 }
             }
 
             // ２－２．正常にレスポンスを受け取った時(コールバック処理)
             override fun onResponse(call: Call, response: Response) {
-                try {
-                    // APIから受け取ったデータを文字列で取得
-                    val responseBody = response.body?.string()
-                    // APIから取得してきたJSON文字列をJSONオブジェクトに変換
-                    val json = JSONObject(responseBody)
-                    val whisperlist = mutableListOf<WhisperRowData>()
-                    // ２－２－３．ささやき情報一覧が存在する間、以下の処理を繰り返す
-                    if (json.getString("whisperList") != null){
-                        // ２－２－３－１．ささやき情報をリストに格納する
-                        // JSONオブジェクトの中から取得
-                        val whisperList = json.getString("whisperList")
-                        // 取得した文字列は配列の構成になっているので、JSON配列に変換
-                        val jsonArray = JSONArray(whisperList)
-                        for (i in 0 until jsonArray.length()){
-                            val userId = jsonArray.getJSONObject(i).getString("userId")
-                            val userName = jsonArray.getJSONObject(i).getString("userName")
-                            val whisperNo = jsonArray.getJSONObject(i).getString("whisperNo").toInt()
-                            val content = jsonArray.getJSONObject(i).getString("content")
-                            val goodFlg = jsonArray.getJSONObject(i).getString("goodFlg").toBoolean()
-                            whisperlist.add(WhisperRowData(userId, userName, whisperNo, content, goodFlg))
+                runOnUiThread {
+                    try {
+                        // APIから受け取ったデータを文字列で取得
+                        val responseBody = response.body?.string()
+                        // APIから取得してきたJSON文字列をJSONオブジェクトに変換
+                        val json = JSONObject(responseBody)
+                        val whisperlist = mutableListOf<WhisperRowData>()
+                        // ２－２－３．ささやき情報一覧が存在する間、以下の処理を繰り返す
+                        if (json.getString("whisperList") != null){
+                            // ２－２－３－１．ささやき情報をリストに格納する
+                            // JSONオブジェクトの中から取得
+                            val whisperList = json.getString("whisperList")
+                            // 取得した文字列は配列の構成になっているので、JSON配列に変換
+                            val jsonArray = JSONArray(whisperList)
+                            for (i in 0 until jsonArray.length()){
+                                val userId = jsonArray.getJSONObject(i).getString("userId")
+                                val userName = jsonArray.getJSONObject(i).getString("userName")
+                                val whisperNo = jsonArray.getJSONObject(i).getString("whisperNo").toInt()
+                                val content = jsonArray.getJSONObject(i).getString("content")
+                                val goodFlg = jsonArray.getJSONObject(i).getString("goodFlg").toBoolean()
+                                whisperlist.add(WhisperRowData(userId, userName, whisperNo, content, goodFlg))
+                            }
+                        }
+                        // RecyclerViewを初期化する
+                        timelineRecycle.layoutManager = LinearLayoutManager(this@TimelineActivity)
+                        // ２－２－４．timelineRecycleにささやき情報リストをセットする
+                        timelineRecycle.adapter = WhisperAdapter(whisperlist)
+                    } catch (e:Exception){
+                        runOnUiThread {
+                            // ２－２－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
+                            Toast.makeText(myapp, e.message, Toast.LENGTH_SHORT).show()
+                            Log.e("timeline Failed 2",e.message.toString())
                         }
                     }
-                    // RecyclerViewを初期化する
-                    timelineRecycle.layoutManager = LinearLayoutManager(this@TimelineActivity)
-                    // ２－２－４．timelineRecycleにささやき情報リストをセットする
-                    timelineRecycle.adapter = WhisperAdapter(whisperlist)
-
-
-                } catch (e:Exception){
-                    // ２－２－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
-                    Toast.makeText(myapp, e.message, Toast.LENGTH_SHORT).show()
                 }
             }
         })
