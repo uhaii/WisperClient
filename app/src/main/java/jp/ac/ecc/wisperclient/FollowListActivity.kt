@@ -2,6 +2,8 @@ package jp.ac.ecc.wisperclient
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +21,8 @@ import org.json.JSONObject
 import java.io.IOException
 
 class FollowListActivity : AppCompatActivity() {
+
+    var overflowMenu = OverflowMenu()
 
     private lateinit var followListText: TextView
     private lateinit var followRecycle: RecyclerView
@@ -142,8 +146,8 @@ class FollowListActivity : AppCompatActivity() {
                         // LinearLayoutManagerを設定し、RecyclerViewを初期化する（productRecyclerViewはonCreateメソッドでfindViewByIdを使い、取得しておきましょう。）
                         followRecycle.layoutManager = LinearLayoutManager(applicationContext)
                         // 作成したlistをアダプターに渡し、RecyclerViewにアダプターを設定する
-                        //val adapter = ProductRecycleAdapter(list)
-                        //followRecycle.adapter = adapter
+                        val adapter = ProductRecycleAdapter(list)
+                        followRecycle.adapter = adapter
                     }
 
                 //１－７．リクエストが失敗した時(コールバック処理)
@@ -154,14 +158,24 @@ class FollowListActivity : AppCompatActivity() {
                             .show()
                     }
                 }
-                //２．オプションメニュー生成時
-                // ２－１．オーバーフローメニューのオプションメニュー生成メソッドに
-                //２－２．戻り値に上記メソッドの戻り値をセットする
                 // ３．オプションメニューアイテム選択時
                 //３－１．オーバーフローメニューのオプションメニューアイテム選択メソッドに　itemとactivityを渡して呼び出す
                 // ３－２．戻り値に親クラスのオプションメニューアイテム選択をセットする
             }
         })
+    }
+    // ２．オプションメニュー生成時
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // ２－１．オーバーフローメニューのオプションメニュー生成メソッドにmenuとactivityを渡して呼び出す
+        // ２－２．戻り値に上記メソッドの戻り値をセットする
+        return overflowMenu.onCreateOptionsMenu(menu, this)
+    }
 
+    // ３．オプションメニューアイテム選択時
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // ３－１．オーバーフローメニューのオプションメニューアイテム選択メソッドにitemとactivityを渡して呼び出す
+        overflowMenu.onOptionsItemSelected(item, this)
+        // ３－２．戻り値に親クラスのオプションメニューアイテム選択をセットする
+        return super.onOptionsItemSelected(item)
     }
 }
