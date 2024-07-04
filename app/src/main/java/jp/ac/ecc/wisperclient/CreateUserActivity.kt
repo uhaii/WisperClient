@@ -83,7 +83,7 @@ class CreateUserActivity : AppCompatActivity() {
                     "\"password\":\"${passwordEdit.text}\""
             "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
-            val request = Request.Builder().url("http://10.0.2.2/SampleProject/sample.php") 
+            val request = Request.Builder().url("http://10.0.2.2/SampleProject/sample.php")
                 .post(requestBody.toRequestBody(mediaType)).build()
 
             // リクエスト送信（非同期処理）
