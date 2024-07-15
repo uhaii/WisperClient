@@ -110,7 +110,9 @@ class TimelineActivity : AppCompatActivity() {
 
                 } catch (e:Exception){
                     // ２－２－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
-                    Toast.makeText(myapp, e.message, Toast.LENGTH_SHORT).show()
+                    this@TimelineActivity.runOnUiThread {
+                        Toast.makeText(myapp, e.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         })
