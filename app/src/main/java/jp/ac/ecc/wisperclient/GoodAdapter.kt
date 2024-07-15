@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import jp.ac.ecc.wisperclient.databinding.GoodRowBinding
 import jp.ac.ecc.wisperclient.databinding.UserRowBinding
 
@@ -41,6 +42,11 @@ class GoodAdapter(private val gooddataset : MutableList<GoodRowData>) : Recycler
         holder.whisperText.text = gooddataset[position].content
         holder.userNameText.text = gooddataset[position].userName
         holder.goodCntText.text = gooddataset[position].goodCount.toString()
+
+        // A：アイコン追加
+        Glide.with(holder.itemView.context)
+            .load(MyApplication.apiUrl + gooddataset[position].icon)
+            .into(holder.userImage)
 
         // ３－２．userImageのクリックイベントリスナーを生成する
         holder.userImage.setOnClickListener {

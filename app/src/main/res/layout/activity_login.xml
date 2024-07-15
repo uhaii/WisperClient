@@ -24,7 +24,7 @@
         android:ems="10"
         android:hint="E-mail(UserId)"
         android:inputType="text"
-        android:text="test1@gmail.com"
+        android:text="testSatou@mail.com"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"

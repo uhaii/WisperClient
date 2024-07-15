@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import jp.ac.ecc.wisperclient.databinding.ActivityUserEditBinding
 import okhttp3.Call
 import okhttp3.Callback
@@ -88,13 +90,25 @@ class UserEditActivity : AppCompatActivity() {
                     //TODO:名前チェック必要 JSONオブジェクトの中からKey値別で情報取得
                     val userName = json.getString("userName")
                     val userProfile = json.getString("profile")
+
+                    // A：アイコン追加
+                    val userimg = json.getString("icon")
+                    Log.i("icon", "${MyApplication.apiUrl}userInfo.php${userimg}")
+
                     //TODO:書き方チェック必要 取得した情報をセットする
                     userNameEdit.text = Editable.Factory.getInstance().newEditable(userName)
                     profileEdit.text = Editable.Factory.getInstance().newEditable(userProfile)
 
+                    // A：アイコン追加
+                    // 设置 Glide 请求选项
+                    Glide.with(this@UserEditActivity)
+                        .load("${MyApplication.apiUrl}userInfo.php${userimg}")
+                        .into(userImage)
+
                 } catch (e : Exception){
                     // １－３－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
                     Toast.makeText(this@UserEditActivity, e.message, Toast.LENGTH_SHORT).show()
+                    Log.e("usereidt Failed 2", e.message.toString())
                 }
             }
 

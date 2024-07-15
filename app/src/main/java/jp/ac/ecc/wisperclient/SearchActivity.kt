@@ -111,7 +111,9 @@ class SearchActivity : AppCompatActivity() {
                                 val userName = jsonArray.getJSONObject(i).getString("userName")
                                 val followCount= jsonArray.getJSONObject(i).getString("followCount").toInt()
                                 val followerCount = jsonArray.getJSONObject(i).getString("followerCount").toInt()
-                                userlist.add(UserRowData(userId,userName,followCount,followerCount))
+                                // アイコン追加
+                                val icon = jsonArray.getJSONObject(i).getString("icon")
+                                userlist.add(UserRowData(userId,userName,followCount,followerCount,icon))
                             }
                         }
 
@@ -128,9 +130,11 @@ class SearchActivity : AppCompatActivity() {
                                 val content = jsonArray.getJSONObject(i).getString("content")
                                 val userId = jsonArray.getJSONObject(i).getString("userId")
                                 val userName = jsonArray.getJSONObject(i).getString("userName")
-                                Log.e("Failed B", jsonArray.getJSONObject(i).getString("goodCount"))
+//                                Log.e("Failed B", jsonArray.getJSONObject(i).getString("goodCount"))
                                 val goodCount = jsonArray.getJSONObject(i).getString("goodCount").toInt()
-                                goodlist.add(GoodRowData(whisperNo,content,userId,userName,goodCount))
+                                // アイコン追加
+                                val icon = jsonArray.getJSONObject(i).getString("icon")
+                                goodlist.add(GoodRowData(whisperNo,content,userId,userName,goodCount,icon))
                             }
                         }
 

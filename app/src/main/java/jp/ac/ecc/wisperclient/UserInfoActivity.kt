@@ -8,11 +8,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import jp.ac.ecc.wisperclient.databinding.ActivityUserInfoBinding
 import okhttp3.Call
 import okhttp3.Callback
@@ -72,7 +74,10 @@ class UserInfoActivity : AppCompatActivity() {
             followerCntText,
             followButton,
             userRecycle,
-            radioGroup
+            radioGroup,
+            // アイコン追加
+            userImage
+
         )
 
         // １－４．radioGroupのチェック変更イベントリスナーを作成する
@@ -90,7 +95,10 @@ class UserInfoActivity : AppCompatActivity() {
                         followerCntText,
                         followButton,
                         userRecycle,
-                        radioGroup
+                        radioGroup,
+                        // アイコン追加
+                        userImage
+
                     )
                 }
             }
@@ -192,6 +200,8 @@ class UserInfoActivity : AppCompatActivity() {
         followBtn : Button,
         userRecycle : RecyclerView,
         radioGroup : RadioGroup,
+        // アイコン追加
+        userImage : ImageView
     ) {
         // ２－１．ユーザささやき情報取得APIをリクエストして対象ユーザのささやき情報とそのユーザがイイねしている情報取得を行う
         // HTTP接続用インスタンス生成
@@ -238,6 +248,11 @@ class UserInfoActivity : AppCompatActivity() {
                     followCountTx.text = json.getString("followCount")
                     followerCountTx.text = json.getString("followerCount")
 
+                    // A：アイコン追加
+                    Glide.with(this@UserInfoActivity)
+                        .load(json.getString("icon"))
+                        .into(userImage)
+
                     // ２－２－３．フォローボタン
                     // ２－２－３－１．フォローユーザならフォロー中と表示、それ以外ならフォローすると表示する
                     if (json.getBoolean("userFollowFlg")){
@@ -263,7 +278,9 @@ class UserInfoActivity : AppCompatActivity() {
                             val whisperNo = jsonArray.getJSONObject(i).getString("whisperNo").toInt()
                             val content = jsonArray.getJSONObject(i).getString("content")
                             val goodFlg = jsonArray.getJSONObject(i).getString("goodFlg").toBoolean()
-                            whisperlist.add(WhisperRowData(userId, userName, whisperNo, content, goodFlg))
+                            // アイコン追加
+                            val icon = jsonArray.getJSONObject(i).getString("icon")
+                            whisperlist.add(WhisperRowData(userId, userName, whisperNo, content, goodFlg,icon))
                         }
                     }
 
@@ -280,7 +297,9 @@ class UserInfoActivity : AppCompatActivity() {
                             val whisperNo = jsonArray.getJSONObject(i).getString("whisperNo").toInt()
                             val content = jsonArray.getJSONObject(i).getString("content")
                             val goodFlg = jsonArray.getJSONObject(i).getString("goodFlg").toBoolean()
-                            goodlist.add(WhisperRowData(userId, content, whisperNo, userName, goodFlg))
+                            // アイコン追加
+                            val icon = jsonArray.getJSONObject(i).getString("icon")
+                            goodlist.add(WhisperRowData(userId, content, whisperNo, userName, goodFlg,icon))
                         }
                     }
 

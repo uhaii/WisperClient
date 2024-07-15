@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import jp.ac.ecc.wisperclient.databinding.WhisperRowBinding
 import okhttp3.Call
 import okhttp3.Callback
@@ -54,6 +55,12 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
         }else {
             holder.goodImage.setImageResource(R.drawable.star)
         }
+
+        // A：アイコン追加
+        Glide.with(holder.itemView.context)
+            .load(MyApplication.apiUrl + whisperdataset[position].icon)
+            .into(holder.userImage)
+
         val context = holder.itemView.context
 
         //TODO: ３－３．userImageのクリックイベントリスナーを生成する
@@ -120,7 +127,7 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
                         if (context is UserInfoActivity){
                             context.getWhisperInfo(
                                 context.application as MyApplication,
-                                whisperdataset[position].userId,
+                                MyApplication.loginUserId as String,
                                 MyApplication.loginUserId.toString(),
                                 context.binding.userNameText,
                                 context.binding.profileText,
@@ -128,13 +135,15 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
                                 context.binding.followerCntText,
                                 context.binding.followButton,
                                 context.binding.userRecycle,
-                                context.binding.radiogroup2
+                                context.binding.radiogroup2,
+                                // アイコン追加
+                                context.binding.userImage
                             )
                         }
                         //TODO: ３－４－２－３．呼び出された画面がタイムライン画面の時
                         // タイムライン画面のタイムライン情報取得API共通実行メソッドを呼び出す
                         if (context is TimelineActivity){
-                            context.getTimelineInfo(context.application as MyApplication, whisperdataset[position].userId, context.binding.timelineRecycle)
+//                            context.getTimelineInfo(context.application as MyApplication, MyApplication.loginUserId as String, context.binding.timelineRecycle)
                         }
 
                     } catch (e : Exception){

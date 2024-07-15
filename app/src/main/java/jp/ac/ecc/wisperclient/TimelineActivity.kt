@@ -101,7 +101,9 @@ class TimelineActivity : AppCompatActivity() {
                                 val whisperNo = jsonArray.getJSONObject(i).getString("whisperNo").toInt()
                                 val content = jsonArray.getJSONObject(i).getString("content")
                                 val goodFlg = jsonArray.getJSONObject(i).getString("goodFlg").toBoolean()
-                                whisperlist.add(WhisperRowData(userId, userName, whisperNo, content, goodFlg))
+                                // アイコン追加
+                                val icon = jsonArray.getJSONObject(i).getString("icon")
+                                whisperlist.add(WhisperRowData(userId, userName, whisperNo, content, goodFlg,icon))
                             }
                         }
                         // RecyclerViewを初期化する

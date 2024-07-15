@@ -5,5 +5,6 @@ data class GoodRowData(
     val content : String,
     val userId : String,
     val userName : String,
-    val goodCount : Int
+    val goodCount : Int,
+    val icon : String
 )

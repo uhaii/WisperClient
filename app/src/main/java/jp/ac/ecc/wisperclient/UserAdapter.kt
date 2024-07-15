@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import jp.ac.ecc.wisperclient.databinding.UserRowBinding
 
 /**
@@ -40,6 +41,11 @@ class UserAdapter(private val userdataset : MutableList<UserRowData>) : Recycler
         holder.userNameText.text = userdataset[position].userName
         holder.followCntText.text = userdataset[position].followCount.toString()
         holder.followerCntText.text = userdataset[position].followerCount.toString()
+
+        // A：アイコン追加
+        Glide.with(holder.itemView.context)
+            .load(MyApplication.apiUrl + userdataset[position].icon)
+            .into(holder.userImage)
 
         // ３－２．userImageのクリックイベントリスナーを生成する
         holder.userImage.setOnClickListener{
