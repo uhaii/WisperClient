@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -62,6 +63,7 @@ class UserInfoActivity : AppCompatActivity() {
 
         // TODO:確認必要　１－２．インテント(前画面)から対象ユーザIDを取得する
         val userId = intent.getStringExtra("userId")
+        Log.i("beforeid",userId.toString())
 
         // １－３．ユーザささやき情報取得API　共通実行メソッドを呼び出す
         getWhisperInfo(
@@ -136,6 +138,10 @@ class UserInfoActivity : AppCompatActivity() {
         // １－７．followButtonのクリックイベントリスナーを作成する
         followButton.setOnClickListener {
             // １－７－１．フォロー管理処理APIをリクエストして対象ユーザのフォロー登録または解除を行う
+            val flag = true
+            if (followButton.text.equals("フォローする")){
+
+            }
             // HTTP接続用インスタンス生成
             val client = OkHttpClient()
             // JSON形式でパラメータを送るようデータ形式を設定
@@ -150,6 +156,7 @@ class UserInfoActivity : AppCompatActivity() {
             val request = Request.Builder().url("${MyApplication.apiUrl}followCtl.php").post(requestBody.toRequestBody(mediaType)).build()
 
             Log.e("successed send followctl", "転送成功")
+            Log.i("successed send followctl", requestBody)
 
             client.newCall(request!!).enqueue(object : Callback
             {
@@ -182,9 +189,7 @@ class UserInfoActivity : AppCompatActivity() {
                         }
                     }
                 }
-
             })
-
         }
     }
 
@@ -213,6 +218,9 @@ class UserInfoActivity : AppCompatActivity() {
                 "\"userId\":\"${userId}\"," +
                 "\"loginUserId\":\"${MyApplication.loginUserId}\"" +
                 "}"
+
+        Log.i("userInfo rbody", requestBody)
+
         // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
         val request = Request.Builder().url("${MyApplication.apiUrl}userWhisperInfo.php").post(requestBody.toRequestBody(mediaType)).build()
 
@@ -232,93 +240,98 @@ class UserInfoActivity : AppCompatActivity() {
             // ２－２．正常にレスポンスを受け取った時(コールバック処理)
             override fun onResponse(call: Call, response: Response) {
                 try {
-                    // ２－２－２．取得したデータを各オブジェクトにセットする
-                    // APIから受け取ったデータを文字列で取得
-                    val responseBody = response.body?.string()
-                    // 確認
-                    Log.e("UserInfo body", responseBody ?:"body is null")
-                    // APIから取得してきたJSON文字列をJSONオブジェクトに変換
-                    val json = JSONObject(responseBody)
-                    // ささやき情報に使っているリスト生成
-                    val whisperlist = mutableListOf<WhisperRowData>()
-                    val goodlist = mutableListOf<WhisperRowData>()
-                    // JSONオブジェクトの中から取得して、セットする
-                    userNameTx.text = json.getString("userName")
-                    userProfileTx.text = json.getString("profile")
-                    followCountTx.text = json.getString("followCount")
-                    followerCountTx.text = json.getString("followerCount")
+                    //
+                    runOnUiThread {
+                        // ２－２－２．取得したデータを各オブジェクトにセットする
+                        // APIから受け取ったデータを文字列で取得
+                        val responseBody = response.body?.string()
+                        // 確認
+                        Log.e("UserInfo body", responseBody ?:"body is null")
+                        // APIから取得してきたJSON文字列をJSONオブジェクトに変換
+                        val json = JSONObject(responseBody)
+                        // ささやき情報に使っているリスト生成
+                        val whisperlist = mutableListOf<WhisperRowData>()
+                        val goodlist = mutableListOf<WhisperRowData>()
+                        // JSONオブジェクトの中から取得して、セットする
+                        userNameTx.text = json.getString("userName")
+                        userProfileTx.text = json.getString("profile")
+                        followCountTx.text = json.getString("followCount")
+                        followerCountTx.text = json.getString("followerCount")
 
-                    // A：アイコン追加
-                    Glide.with(this@UserInfoActivity)
-                        .load(json.getString("icon"))
-                        .into(userImage)
+                        // A：アイコン追加
+                        Glide.with(this@UserInfoActivity)
+                            .load(MyApplication.apiUrl+json.getString("iconPath").toUri())
+                            .into(userImage)
 
-                    // ２－２－３．フォローボタン
-                    // ２－２－３－１．フォローユーザならフォロー中と表示、それ以外ならフォローすると表示する
-                    if (json.getBoolean("userFollowFlg")){
-                        followBtn.text = "フォロー中"
-                    } else {
-                        followBtn.text = "フォローする"
-                    }
-                    // TODO:確認 ２－２－３－２．対象ユーザがログインユーザの時、ボタンを非表示にする
-                    if (loginUserId == json.getString("userId")){
-                        followBtn.visibility = View.GONE
-                    }
-
-                    // ２－２－４．ささやき情報一覧が存在する間、以下の処理を繰り返す
-                    if (json.getString("whisperList") != null){
-                        // ２－２－４－１．ささやき情報をリストに格納する
-                        // JSONオブジェクトの中から取得
-                        val whisperList = json.getString("whisperList")
-                        // 取得した文字列は配列の構成になっているので、JSON配列に変換
-                        val jsonArray = JSONArray(whisperList)
-                        for (i in 0 until jsonArray.length()){
-                            val userId = jsonArray.getJSONObject(i).getString("userId")
-                            val userName = jsonArray.getJSONObject(i).getString("userName")
-                            val whisperNo = jsonArray.getJSONObject(i).getString("whisperNo").toInt()
-                            val content = jsonArray.getJSONObject(i).getString("content")
-                            val goodFlg = jsonArray.getJSONObject(i).getString("goodFlg").toBoolean()
-                            // アイコン追加
-                            val icon = jsonArray.getJSONObject(i).getString("icon")
-                            whisperlist.add(WhisperRowData(userId, userName, whisperNo, content, goodFlg,icon))
+                        // ２－２－３．フォローボタン
+                        // ２－２－３－１．フォローユーザならフォロー中と表示、それ以外ならフォローすると表示する
+                        if (json.getBoolean("userFollowFlg")){
+                            followBtn.text = "フォロー中"
+                        } else {
+                            followBtn.text = "フォローする"
                         }
-                    }
-
-                    // ２－２－５．イイね情報一覧が存在する間、以下の処理を繰り返す
-                    if (json.getString("goodList") != null){
-                        // ２－２－５－１．イイね情報をリストに格納する
-                        // JSONオブジェクトの中から取得
-                        val goodList = json.getString("goodList")
-                        // 取得した文字列は配列の構成になっているので、JSON配列に変換
-                        val jsonArray = JSONArray(goodList)
-                        for (i in 0 until jsonArray.length()){
-                            val userId = jsonArray.getJSONObject(i).getString("userId")
-                            val userName = jsonArray.getJSONObject(i).getString("userName")
-                            val whisperNo = jsonArray.getJSONObject(i).getString("whisperNo").toInt()
-                            val content = jsonArray.getJSONObject(i).getString("content")
-                            val goodFlg = jsonArray.getJSONObject(i).getString("goodFlg").toBoolean()
-                            // アイコン追加
-                            val icon = jsonArray.getJSONObject(i).getString("icon")
-                            goodlist.add(WhisperRowData(userId, content, whisperNo, userName, goodFlg,icon))
+                        // TODO:確認 ２－２－３－２．対象ユーザがログインユーザの時、ボタンを非表示にする
+                        if (loginUserId == json.getString("userId")){
+                            followBtn.visibility = View.GONE
                         }
-                    }
 
-                    // ２－２－６．userRecycle
-                    // RecyclerViewを初期化する
-                    userRecycle.layoutManager = LinearLayoutManager(applicationContext)
-                    radioGroup.setOnCheckedChangeListener { group, checkedId ->
-                        when(checkedId){
-                            // ２－２－６－１．ラジオボタンがwhisperRadioを選択している時ささやき行情報のアダプターにささやき情報リストをセットする
-                            R.id.whisperRadio -> {
-                                userRecycle.adapter = WhisperAdapter(whisperlist)
-                                Log.e("Whisper Successed","ささやき情報リスト表示成功")
-                            }
-                            // ２－２－６－２．ラジオボタンがgoodInfoRadioを選択している時ささやき行情報のアダプターにイイね情報リストをセットする
-                            R.id.goodInfoRadio -> {
-                                userRecycle.adapter = WhisperAdapter(goodlist)
-                                Log.e("GoodInfo Successed","イイね情報リスト表示成功")
+                        // ２－２－４．ささやき情報一覧が存在する間、以下の処理を繰り返す
+                        if (json.getString("whisperList") != null){
+                            // ２－２－４－１．ささやき情報をリストに格納する
+                            // JSONオブジェクトの中から取得
+                            val whisperList = json.getString("whisperList")
+                            // 取得した文字列は配列の構成になっているので、JSON配列に変換
+                            val jsonArray = JSONArray(whisperList)
+                            for (i in 0 until jsonArray.length()){
+                                val userId = jsonArray.getJSONObject(i).getString("userId")
+                                val userName = jsonArray.getJSONObject(i).getString("userName")
+                                val whisperNo = jsonArray.getJSONObject(i).getString("whisperNo").toInt()
+                                val content = jsonArray.getJSONObject(i).getString("content")
+                                val goodFlg = jsonArray.getJSONObject(i).getString("goodflg").toBoolean()
+                                // アイコン追加
+                                val icon = jsonArray.getJSONObject(i).getString("iconPath").toUri()
+                                whisperlist.add(WhisperRowData(userId, userName, whisperNo, content, goodFlg,icon))
                             }
                         }
+
+                        // ２－２－５．イイね情報一覧が存在する間、以下の処理を繰り返す
+                        if (json.getString("goodList") != null){
+                            // ２－２－５－１．イイね情報をリストに格納する
+                            // JSONオブジェクトの中から取得
+                            val goodList = json.getString("goodList")
+                            // 取得した文字列は配列の構成になっているので、JSON配列に変換
+                            Log.i("check", goodList)
+                            val jsonArray = JSONArray(goodList)
+                            for (i in 0 until jsonArray.length()){
+                                val userId = jsonArray.getJSONObject(i).getString("userId")
+                                val userName = jsonArray.getJSONObject(i).getString("userName")
+                                val whisperNo = jsonArray.getJSONObject(i).getString("whisperNo").toInt()
+                                val content = jsonArray.getJSONObject(i).getString("content")
+                                val goodFlg = jsonArray.getJSONObject(i).getString("goodflg").toBoolean()
+                                // アイコン追加
+                                val icon = jsonArray.getJSONObject(i).getString("iconPath").toUri()
+                                goodlist.add(WhisperRowData(userId, content, whisperNo, userName, goodFlg,icon))
+                            }
+                        }
+
+                        // ２－２－６．userRecycle
+                        // RecyclerViewを初期化する
+                        userRecycle.layoutManager = LinearLayoutManager(applicationContext)
+                        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+                            when(checkedId){
+                                // ２－２－６－１．ラジオボタンがwhisperRadioを選択している時ささやき行情報のアダプターにささやき情報リストをセットする
+                                R.id.whisperRadio -> {
+                                    userRecycle.adapter = WhisperAdapter(whisperlist)
+                                    Log.e("Whisper Successed","ささやき情報リスト表示成功")
+                                }
+                                // ２－２－６－２．ラジオボタンがgoodInfoRadioを選択している時ささやき行情報のアダプターにイイね情報リストをセットする
+                                R.id.goodInfoRadio -> {
+                                    userRecycle.adapter = WhisperAdapter(goodlist)
+                                    Log.e("GoodInfo Successed","イイね情報リスト表示成功")
+                                }
+                            }
+                        }
+
                     }
 
                 } catch (e : Exception) {

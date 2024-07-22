@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import jp.ac.ecc.wisperclient.databinding.ActivityUserEditBinding
@@ -61,6 +62,7 @@ class UserEditActivity : AppCompatActivity() {
         val requestBody = "{" +
                 "\"userId\":\"${userIdText.text}\"" +
                 "}"
+        Log.i("rbody",requestBody)
 
 
         // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
@@ -82,33 +84,46 @@ class UserEditActivity : AppCompatActivity() {
             // １－３．正常にレスポンスを受け取った時(コールバック処理)
             override fun onResponse(call: Call, response: Response) {
                 try {
-                    // １－３－２．取得したデータを各オブジェクトにセットする
-                    // APIから受け取ったデータを文字列で取得
-                    val responseBody = response.body?.string()
-                    // APIから取得してきたJSON文字列をJSONオブジェクトに変換
-                    val json = JSONObject(responseBody)
-                    //TODO:名前チェック必要 JSONオブジェクトの中からKey値別で情報取得
-                    val userName = json.getString("userName")
-                    val userProfile = json.getString("profile")
+                    runOnUiThread {
+                        // １－３－２．取得したデータを各オブジェクトにセットする
+                        // APIから受け取ったデータを文字列で取得
+                        val responseBody = response.body?.string()
+                        // APIから取得してきたJSON文字列をJSONオブジェクトに変換
+                        val json = JSONObject(responseBody)
+                        //TODO:名前チェック必要 JSONオブジェクトの中からKey値別で情報取得
+                        val userName = json.getString("userName")
+                        val userProfile = json.getString("profile")
+                        var userimgs = json.getString("iconPath").toUri()
+                        Log.e("name",userName)
+                        Log.e("prof",userProfile)
 
-                    // A：アイコン追加
-                    val userimg = json.getString("icon")
-                    Log.i("icon", "${MyApplication.apiUrl}userInfo.php${userimg}")
+                        // A：アイコン追加
+                        Log.i("icon", MyApplication.apiUrl + userimgs)
+                        // テスト用
+//                        val img = userimgs.toString()
+//                        if (img.contains("\\")) {
+//                            img.replace("\\", "/")
+//                            userimgs = img.toUri()
+//                        }
 
-                    //TODO:書き方チェック必要 取得した情報をセットする
-                    userNameEdit.text = Editable.Factory.getInstance().newEditable(userName)
-                    profileEdit.text = Editable.Factory.getInstance().newEditable(userProfile)
+                        //TODO:書き方チェック必要 取得した情報をセットする
+                        userNameEdit.text = Editable.Factory.getInstance().newEditable(userName)
+                        profileEdit.text = Editable.Factory.getInstance().newEditable(userProfile)
 
-                    // A：アイコン追加
-                    // 设置 Glide 请求选项
-                    Glide.with(this@UserEditActivity)
-                        .load("${MyApplication.apiUrl}userInfo.php${userimg}")
-                        .into(userImage)
-
+                        // A：アイコン追加
+                        // 设置 Glide 请求选项
+                        Glide.with(this@UserEditActivity)
+                            .load(MyApplication.apiUrl+userimgs)
+//                            .load("https://click.ecc.ac.jp/ecc/whisper24_c/images/satouicon.png".toUri())
+//                            .load("https://pbs.twimg.com/media/F4H3ZdbbYAEL7IA?format=jpg&name=large".toUri())
+                            .into(userImage)
+                    }
                 } catch (e : Exception){
-                    // １－３－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
-                    Toast.makeText(this@UserEditActivity, e.message, Toast.LENGTH_SHORT).show()
-                    Log.e("usereidt Failed 2", e.message.toString())
+                    runOnUiThread {
+                        // １－３－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
+                        Toast.makeText(this@UserEditActivity, e.message, Toast.LENGTH_SHORT).show()
+                        Log.e("usereidt Failed 2", e.message.toString())
+                    }
                 }
             }
 
@@ -148,18 +163,22 @@ class UserEditActivity : AppCompatActivity() {
                 // １－５－２．正常にレスポンスを受け取った時(コールバック処理)
                 override fun onResponse(call: Call, response: Response) {
                     try {
-                        //TODO: １－５－２－２．インテントにログインユーザIDをセットする
-                        val intent = Intent(this@UserEditActivity, UserInfoActivity::class.java)
-                        intent.putExtra("userId", MyApplication.loginUserId)
-                        // １－５－２－３．ユーザ情報画面に遷移する
-                        Log.e("Transiton Successed","画面遷移成功")
-                        startActivity(intent)
-                        // １－５－２－４．自分の画面を閉じる
-                        finish()
+                        runOnUiThread {
+                            //TODO: １－５－２－２．インテントにログインユーザIDをセットする
+                            val intent = Intent(this@UserEditActivity, UserInfoActivity::class.java)
+                            intent.putExtra("userId", MyApplication.loginUserId)
+                            // １－５－２－３．ユーザ情報画面に遷移する
+                            Log.e("Transiton Successed","画面遷移成功")
+                            startActivity(intent)
+                            // １－５－２－４．自分の画面を閉じる
+                            finish()
+                        }
 
                     } catch (e : Exception){
-                        // １－５－２－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
-                        Toast.makeText(this@UserEditActivity, e.message, Toast.LENGTH_SHORT).show()
+                        runOnUiThread {
+                            // １－５－２－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
+                            Toast.makeText(this@UserEditActivity, e.message, Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             })

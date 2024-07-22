@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import jp.ac.ecc.wisperclient.databinding.ActivitySearchBinding
 import okhttp3.Call
@@ -112,7 +113,7 @@ class SearchActivity : AppCompatActivity() {
                                 val followCount= jsonArray.getJSONObject(i).getString("followCount").toInt()
                                 val followerCount = jsonArray.getJSONObject(i).getString("followerCount").toInt()
                                 // アイコン追加
-                                val icon = jsonArray.getJSONObject(i).getString("icon")
+                                val icon = jsonArray.getJSONObject(i).getString("iconPath").toUri()
                                 userlist.add(UserRowData(userId,userName,followCount,followerCount,icon))
                             }
                         }
@@ -133,7 +134,7 @@ class SearchActivity : AppCompatActivity() {
 //                                Log.e("Failed B", jsonArray.getJSONObject(i).getString("goodCount"))
                                 val goodCount = jsonArray.getJSONObject(i).getString("goodCount").toInt()
                                 // アイコン追加
-                                val icon = jsonArray.getJSONObject(i).getString("icon")
+                                val icon = jsonArray.getJSONObject(i).getString("iconPath").toUri()
                                 goodlist.add(GoodRowData(whisperNo,content,userId,userName,goodCount,icon))
                             }
                         }

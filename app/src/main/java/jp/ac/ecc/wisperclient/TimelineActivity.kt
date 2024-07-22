@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import jp.ac.ecc.wisperclient.MyApplication
@@ -102,7 +103,7 @@ class TimelineActivity : AppCompatActivity() {
                                 val content = jsonArray.getJSONObject(i).getString("content")
                                 val goodFlg = jsonArray.getJSONObject(i).getString("goodFlg").toBoolean()
                                 // アイコン追加
-                                val icon = jsonArray.getJSONObject(i).getString("icon")
+                                val icon = jsonArray.getJSONObject(i).getString("iconPath").toUri()
                                 whisperlist.add(WhisperRowData(userId, userName, whisperNo, content, goodFlg,icon))
                             }
                         }
