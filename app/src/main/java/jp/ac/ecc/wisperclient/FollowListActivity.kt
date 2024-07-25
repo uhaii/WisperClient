@@ -1,11 +1,13 @@
 package jp.ac.ecc.wisperclient
 
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import okhttp3.*
@@ -80,7 +82,7 @@ class FollowListActivity : AppCompatActivity() {
                     // APIから受け取ったデータを文字列で取得
                     val responseBody = response.body?.string()
                     // RecyclerViewに設定するリストを作成
-                    val list = mutableListOf<RowData>()
+                    val list = mutableListOf<UserRowData>()
                     // APIから取得してきたJSON文字列をJSONオブジェクトに変換
                     val json = JSONObject(responseBody)
                     // JSONオブジェクトの中からKey値がlistのValue値を文字列として取得(Value値のイメージ：{"list" : [{"???" : "xxx"}, {"???" : "yyy"} ...]})
@@ -92,23 +94,19 @@ class FollowListActivity : AppCompatActivity() {
                         // フォロー情報またはフォロワー情報一覧が存在する間、以下の処理を繰り返す
                         for (i in 0 until jsonArray.length()) {
                             val userId = jsonArray.getJSONObject(i).getString("userId")
-                            val userImage = jsonArray.getJSONObject(i).getString("userImage")
                             val userName = jsonArray.getJSONObject(i).getString("userName")
-                            val followText = jsonArray.getJSONObject(i).getString("followText")
-                            val followerText = jsonArray.getJSONObject(i).getString("followerText")
-                            val followCount = jsonArray.getJSONObject(i).getString("followCount")
-                            val followerCount = jsonArray.getJSONObject(i).getString("followerCount")
+                            val followCount = jsonArray.getJSONObject(i).getString("followCount").toInt()
+                            val followerCount = jsonArray.getJSONObject(i).getString("followerCount").toInt()
+                            val icon = jsonArray.getJSONObject(i).getString("icon").toUri()
 
                             // フォロー情報またはフォロワー情報をリストに格納する
                             list.add(
-                                RowData(
+                                UserRowData(
                                     userId,
-                                    userImage,
                                     userName,
-                                    followText,
-                                    followerText,
                                     followCount,
-                                    followerCount
+                                    followerCount,
+                                    icon
                                 )
                             )
                         }
@@ -119,7 +117,7 @@ class FollowListActivity : AppCompatActivity() {
                         // LinearLayoutManagerを設定し、RecyclerViewを初期化する
                         followRecycle.layoutManager = LinearLayoutManager(applicationContext)
                         // 作成したlistをアダプターに渡し、RecyclerViewにアダプターを設定する
-                        val adapter = ProductRecycleAdapter(list)
+                        val adapter = UserAdapter(list)
                         followRecycle.adapter = adapter
                     }
                 } catch (e: Exception) {
