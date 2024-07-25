@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class ProductRecycleAdapter (private val dataset: MutableList<RowData>) : RecyclerView.Adapter<ProductRecycleAdapter.ViewHolder>() {
+class ProductRecycleAdapter (private val dataset: MutableList<UserRowData>) : RecyclerView.Adapter<ProductRecycleAdapter.ViewHolder>() {
     // 画面デザインで定義したオブジェクトを変数として宣言する。
     class ViewHolder(item : View) : RecyclerView.ViewHolder(item){
         val userImage : ImageView

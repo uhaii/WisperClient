@@ -1,6 +1,7 @@
 package jp.ac.ecc.wisperclient
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Telephony.Mms.Intents
@@ -38,6 +39,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Log.d("check", Uri.parse("images\\/satouicon.png").toString())
 
         // １－１．画面デザインで定義したオブジェクトを変数として宣言する。
         // bindingを使うためしなくても良いと思いますが設計書通りにする。

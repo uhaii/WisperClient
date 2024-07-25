@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import jp.ac.ecc.wisperclient.databinding.WhisperRowBinding
 import okhttp3.Call
 import okhttp3.Callback
@@ -44,7 +45,7 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
     }
 
     // ３．ビューホルダーバインド時
-     override fun onBindViewHolder(holder: WhisperViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: WhisperViewHolder, position: Int) {
         // ３－１．ビューホルダーのオブジェクトに対象行のデータをセットする
         holder.userNameText.text = whisperdataset[position].userName
         holder.whisperText.text = whisperdataset[position].content
@@ -54,6 +55,12 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
         }else {
             holder.goodImage.setImageResource(R.drawable.star)
         }
+
+        // A：アイコン追加
+        Glide.with(holder.itemView.context)
+            .load(MyApplication.apiUrl + whisperdataset[position].icon)
+            .into(holder.userImage)
+
         val context = holder.itemView.context
 
         //TODO: ３－３．userImageのクリックイベントリスナーを生成する
@@ -79,6 +86,7 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
         // ３－４．goodImageのクリックイベントリスナーを生成する
         holder.goodImage.setOnClickListener {
             // ３－４－１．イイね管理処理APIをリクエストして入力した対象行のささやきのイイねの登録・解除を行う
+            whisperdataset[position].goodFlg = !whisperdataset[position].goodFlg
             // HTTP接続用インスタンス生成
             val client = OkHttpClient()
             // JSON形式でパラメータを送るようデータ形式を設定
@@ -89,16 +97,26 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
                     "\"whisperNo\":\"${whisperdataset[position].whisperNo}\"," +
                     "\"goodFlg\":\"${whisperdataset[position].goodFlg}\""
             "}"
+
+            // 情報の変更を通知
+            notifyItemChanged(position)
+
+            // 確認
+            Log.e("whisperadapter requestBody",requestBody)
+
+
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
             val request = Request.Builder().url("${MyApplication.apiUrl}goodCtl.php").post(requestBody.toRequestBody(mediaType)).build()
 
-            Log.e("successed send", "転送成功")
+            Log.e("whisperadapter successed send", "転送成功")
+
 
             client.newCall(request!!).enqueue(object : Callback{
                 // ３－４－３．リクエストが失敗した時(コールバック処理)
                 override fun onFailure(call: Call, e: IOException) {
                     // ３－４－３－１．エラーメッセージをトースト表示する
                     Toast.makeText(context, e.message ,Toast.LENGTH_SHORT).show()
+                    Log.e("whisperadapter Failed 1", e.message.toString())
                 }
 
                 // ３－４－２．正常にレスポンスを受け取った時(コールバック処理)
@@ -109,7 +127,7 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
                         if (context is UserInfoActivity){
                             context.getWhisperInfo(
                                 context.application as MyApplication,
-                                whisperdataset[position].userId,
+                                MyApplication.loginUserId as String,
                                 MyApplication.loginUserId.toString(),
                                 context.binding.userNameText,
                                 context.binding.profileText,
@@ -117,26 +135,29 @@ class WhisperAdapter(private val whisperdataset: MutableList<WhisperRowData>) : 
                                 context.binding.followerCntText,
                                 context.binding.followButton,
                                 context.binding.userRecycle,
-                                context.binding.radiogroup2
+                                context.binding.radiogroup2,
+                                // アイコン追加
+                                context.binding.userImage
                             )
                         }
                         //TODO: ３－４－２－３．呼び出された画面がタイムライン画面の時
                         // タイムライン画面のタイムライン情報取得API共通実行メソッドを呼び出す
                         if (context is TimelineActivity){
-                            context.getTimelineInfo(context.application as MyApplication, whisperdataset[position].userId, context.binding.timelineRecycle)
+//                            context.getTimelineInfo(context.application as MyApplication, MyApplication.loginUserId as String, context.binding.timelineRecycle)
                         }
 
                     } catch (e : Exception){
                         // ３－４－２－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
                         Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                        Log.e("whisperadapter Failed 2", e.message.toString())
                     }
 
                 }
 
             })
         }
-        
-     }
+
+    }
 
     // ４．行数取得時
     override fun getItemCount(): Int {

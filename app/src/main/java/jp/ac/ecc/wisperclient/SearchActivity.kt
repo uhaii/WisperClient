@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import jp.ac.ecc.wisperclient.databinding.ActivitySearchBinding
 import okhttp3.Call
@@ -58,12 +59,8 @@ class SearchActivity : AppCompatActivity() {
 
             // １－２－２．検索結果取得APIをリクエストして検索キーワードに該当する情報取得を行う
             // 追加：ラジオボタン判断
-            val section : Int
-            if (userRadio.isChecked){
-                section = 1
-            } else {
-                section = 2
-            }
+            val section : Int = if (userRadio.isChecked)  1 else 2
+
             // HTTP接続用インスタンス生成
             val client = OkHttpClient()
             // JSON形式でパラメータを送るようデータ形式を設定
@@ -84,6 +81,7 @@ class SearchActivity : AppCompatActivity() {
                     runOnUiThread {
                         // １－２－４－１．エラーメッセージをトースト表示する
                         Toast.makeText(this@SearchActivity, e.message, Toast.LENGTH_SHORT).show()
+                        Log.e("Failed 1", e.message.toString())
                     }
                 }
 
@@ -92,15 +90,17 @@ class SearchActivity : AppCompatActivity() {
                     try {
                         // APIから受け取ったデータを文字列で取得
                         val responseBody = response.body?.string()
+                        // 確認
+                        Log.e("body", responseBody ?:"body is null")
                         // APIから取得してきたJSON文字列をJSONオブジェクトに変換
                         val json = JSONObject(responseBody)
                         // RecyclerViewに設定するリストを作成
                         val userlist = mutableListOf<UserRowData>()
                         val goodlist = mutableListOf<GoodRowData>()
 
-
                         // １－２－３－２．ユーザ情報一覧(API側のこと)が存在する間、以下の処理を繰り返す
-                        if (json.has("userList")){
+                        if (json.getString("userList") != "[]"){
+                            Log.e("Failed A", json.getString("userList"))
                             // １－２－３－２－１．ユーザ情報をリストに格納する
                             // JSONオブジェクトの中から取得
                             val userList = json.getString("userList")
@@ -112,12 +112,14 @@ class SearchActivity : AppCompatActivity() {
                                 val userName = jsonArray.getJSONObject(i).getString("userName")
                                 val followCount= jsonArray.getJSONObject(i).getString("followCount").toInt()
                                 val followerCount = jsonArray.getJSONObject(i).getString("followerCount").toInt()
-                                userlist.add(UserRowData(userId,userName,followCount,followerCount))
+                                // アイコン追加
+                                val icon = jsonArray.getJSONObject(i).getString("iconPath").toUri()
+                                userlist.add(UserRowData(userId,userName,followCount,followerCount,icon))
                             }
                         }
 
                         // １－２－３－３．イイね情報一覧が存在する間、以下の処理を繰り返す
-                        if (json.has("whisperList")){
+                        if (json.getString("whisperList") != "[]"){
                             // １－２－３－３－１．イイね情報をリストに格納する
                             // JSONオブジェクトの中から取得
                             val whisperList = json.getString("whisperList")
@@ -130,9 +132,13 @@ class SearchActivity : AppCompatActivity() {
                                 val userId = jsonArray.getJSONObject(i).getString("userId")
                                 val userName = jsonArray.getJSONObject(i).getString("userName")
                                 val goodCount = jsonArray.getJSONObject(i).getString("goodCount").toInt()
-                                goodlist.add(GoodRowData(whisperNo,content,userId,userName,goodCount))
+                                // アイコン追加
+                                val icon = jsonArray.getJSONObject(i).getString("iconPath").toUri()
+                                goodlist.add(GoodRowData(whisperNo,content,userId,userName,goodCount,icon))
                             }
                         }
+
+                        Log.e("Failed C", "C")
 
                         // １－２－３．searchRecycle
                         this@SearchActivity.runOnUiThread {
@@ -152,8 +158,11 @@ class SearchActivity : AppCompatActivity() {
                         }
 
                     } catch (e : Exception){
-                        // １－２－３－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
-                        Toast.makeText(this@SearchActivity, e.message, Toast.LENGTH_SHORT).show()
+                        runOnUiThread {
+                            // １－２－３－１．JSONデータがエラーの場合、受け取ったエラーメッセージをトースト表示して処理を終了させる
+                            Toast.makeText(this@SearchActivity, e.message, Toast.LENGTH_SHORT).show()
+                            Log.e("Failed 2", e.message.toString())
+                        }
                     }
                 }
             })
@@ -175,4 +184,3 @@ class SearchActivity : AppCompatActivity() {
     }
 
 }
-
