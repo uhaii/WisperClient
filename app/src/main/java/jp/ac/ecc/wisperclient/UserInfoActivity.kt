@@ -138,10 +138,9 @@ class UserInfoActivity : AppCompatActivity() {
         // １－７．followButtonのクリックイベントリスナーを作成する
         followButton.setOnClickListener {
             // １－７－１．フォロー管理処理APIをリクエストして対象ユーザのフォロー登録または解除を行う
-            val flag = true
-            if (followButton.text.equals("フォローする")){
-
-            }
+            var isFollowing = followButton.text.equals("A")
+            var flag = !isFollowing
+            Log.i("flag 1", "$flag///$isFollowing")
             // HTTP接続用インスタンス生成
             val client = OkHttpClient()
             // JSON形式でパラメータを送るようデータ形式を設定
@@ -150,13 +149,13 @@ class UserInfoActivity : AppCompatActivity() {
             val requestBody = "{" +
                     "\"userId\":\"${MyApplication.loginUserId}\"," +
                     "\"followUserId\":\"${userId}\"," +
-                    "\"followFlg\":\"true\"" +
+                    "\"followFlg\":${flag}" +
                     "}"
             // Requestを作成(先ほど設定したデータ形式とパラメータ情報をもとにリクエストデータを作成)
             val request = Request.Builder().url("${MyApplication.apiUrl}followCtl.php").post(requestBody.toRequestBody(mediaType)).build()
 
             Log.e("successed send followctl", "転送成功")
-            Log.i("successed send followctl", requestBody)
+            Log.i("body", requestBody)
 
             client.newCall(request!!).enqueue(object : Callback
             {
@@ -172,6 +171,19 @@ class UserInfoActivity : AppCompatActivity() {
                 // １－７－２．正常にレスポンスを受け取った時(コールバック処理)
                 override fun onResponse(call: Call, response: Response) {
                     try {
+                        // 状態更新
+                        isFollowing = !isFollowing
+                        Log.i("response.body.toString()", response.body.toString())
+                        Log.i("flag 2", "$flag///$isFollowing")
+                        if (isFollowing){
+//                            followBtn.text = "フォロー中"
+                            followButton.text = "A"
+                        } else {
+//                            followBtn.text = "フォローする"
+                            followButton.text = "B"
+                        }
+
+
                         val intent = Intent(this@UserInfoActivity, UserInfoActivity::class.java)
                         // １－７－２－２．インテントに対象ユーザIDをセットする
                         intent.putExtra("userId", userId)
@@ -266,9 +278,14 @@ class UserInfoActivity : AppCompatActivity() {
                         // ２－２－３．フォローボタン
                         // ２－２－３－１．フォローユーザならフォロー中と表示、それ以外ならフォローすると表示する
                         if (json.getBoolean("userFollowFlg")){
-                            followBtn.text = "フォロー中"
+//                            followBtn.text = "フォロー中"
+                            Log.d("aaaa", "フォロー中")
+                            followBtn.text = "A"
                         } else {
-                            followBtn.text = "フォローする"
+//                            followBtn.text = "フォローする"
+                            Log.d("bbbb", "フォローする")
+                            followBtn.text = "B"
+
                         }
                         // TODO:確認 ２－２－３－２．対象ユーザがログインユーザの時、ボタンを非表示にする
                         if (loginUserId == json.getString("userId")){
